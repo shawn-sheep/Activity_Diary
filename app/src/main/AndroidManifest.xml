@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ActivityDiary
+  ~
+  ~ Copyright (C) 2017-2022 Raphael Mack http://www.raphael-mack.de
+  ~ Copyright (C) 2018 Bc. Ondrej Janitor
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- for photo storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:required="false" />
+
+    <uses-feature android:name="android.hardware.location.gps"
+        android:required="false"/>
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="false"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:required="false"/>
+    <uses-permission android:name="android.permission.INTERNET"
+        android:required="false"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:name=".ActivityDiaryApplication"
+        android:largeHeap="true"
+        android:installLocation="auto">
+        <activity android:name=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.generic.EditActivity"
+            android:label="@string/activity_title_edit_new"
+            android:windowSoftInputMode="stateVisible"
+            />
+        <activity android:name=".ui.generic.ManageActivity"
+            android:label="@string/activity_title_manage_activities" />
+        <activity android:name=".ui.history.HistoryDetailActivity"
+            android:label="@string/activity_title_history_detail"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false"
+            />
+        <activity android:name=".ui.history.HistoryActivity"
+            android:label="@string/activity_title_history"
+            android:launchMode="singleTop"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name=".action.SEARCH_ACTIVITY" />
+                <action android:name=".action.SEARCH_NOTE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+        <activity android:name=".ui.generic.AboutActivity"
+            android:label="@string/activity_title_about" />
+        <activity android:name=".ui.generic.PrivacyPolicyActivity"
+            android:label="@string/activity_title_privacy_policy" />
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:label="@string/activity_title_settings"/>
+        <activity android:name=".ui.location.MapActivity"
+            android:label="@string/activity_title_map" />
+        <activity android:name=".ui.statistics.StatisticsActivity"
+            android:label="@string/activity_title_stats" />
+        <provider
+            android:name=".db.ActivityDiaryContentProvider"
+            android:authorities="${applicationId}.provider"
+            android:multiprocess="false"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:label="ActivityDiaryProvider"
+            android:icon="@mipmap/ic_launcher"
+            android:readPermission="${applicationId}.READ"
+            android:writePermission="${applicationId}.WRITE"
+            />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
+        <service
+            android:name=".helpers.RefreshService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+    </application>
+</manifest>

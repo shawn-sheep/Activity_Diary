@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ActivityDiary
+  ~
+  ~ Copyright (C) 2017-2018 Raphael Mack http://www.raphael-mack.de
+  ~ Copyright (C) 2018 Bc. Ondrej Janitor
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="app_name">Aṣiṣe Iṣẹ-ṣiṣe</string>
+    <string name="about_text_version">version <b>%1$s</b></string>
+    <string name="about_text_intro">A ọjọ-ọjọ fun eyikeyi iru awọn iṣẹ - ṣeto awọn iṣẹ rẹ ni ọna idaniloju ati ki o leti ti o ba ti ni nkan ti o reti lati reoccur.</string>
+    <string name="about_text_licence_h">Iwe-ašẹ</string>
+    <string name="about_text_licence"><![CDATA[%1$s jẹ software ọfẹ: o le ṣe alabapin rẹ ati / tabi yi o pada labẹ awọn ofin ti <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU Gbogbogbo Igbẹhin Gbogbogbo</a>]]></string>
+    <string name="about_text_license_2">Eto yii pin ni ireti pe yoo wulo, ṣugbọn LATI ỌJẸ ATILẸYIN ỌJA; laisi ani atilẹyin ọja ti MERCHANTABILITY tabi FITNESS FUN NIPA PURPOSE. Wo Iwe-ašẹ Gbogbogbo GNU fun alaye diẹ sii.</string>
+    <string name="about_text_privacy_h">Privacy Policy</string>
+    <string name="about_text_privacy"><![CDATA[%1$s and its authors have a deep interest to respect your privacy. The nature of this app is to track and store your activites and where and how you do them. Nevertheless it is your data in your hands and is not transmitted to any server or external party by the app without your explicit request. Read the full <a href=\"de.rampro.activitydiary.privacy_policy://show\">privacy policy</a>.]]></string>
+    <string name="about_text_contact_h">Kan si</string>
+    <string name="about_text_contact"><![CDATA[Fun awọn idun ati awọn didaba lo awọn bọtini tacker <a href="https://github.com/ramack/ActivityDiary/issues"/>, daradara ni ede Gẹẹsi.]]></string>
+    <string name="about_text_contact_2"><![CDATA[Orisun koodu ni a le rii lori <a href="https://github.com/ramack/ActivityDiary">Github</a>.]]></string>
+    <string name="about_text_support_h">Atilẹyin</string>
+    <string name="about_text_support"><![CDATA[Ni irú ti o fẹ lati ṣe atilẹyin fun idagbasoke %1$s ṣe ayẹwo lati sọ awọn ọrọ <a href="https://github.com/ramack/ActivityDiary/issues">lori iwe</a>, itumọ lori <a href="https://crowdin.com/project/activitydiary">gbojọ</a> tabi ẹbun lori <a href="https://liberapay.com/ActivityDiary/">Liberapay</a>.]]></string>
+    <string name="about_text_cont_h">Awọn oluranlọwọ</string>
+    <string name="about_text_cont_2">A n wa siwaju lati darukọ orukọ rẹ ninu akojọ yii, na.</string>
+    <string name="about_text_lib_h">Awọn ile-ikawe</string>
+    <string name="about_text_lib">Awọn ile-ikawe wọnyi wa ni lilo nipasẹ ohun elo yii ati iwe-aṣẹ labẹ awọn iwe-aṣẹ ti a daruko:</string>
+    <string name="perm_write_external_storage_xplain">Ntọju awọn fọto nbeere igbanilaaye lati ṣe bẹ &#8230;</string>
+    <string name="unsupported_on_api_level">Ẹya yii ko ni atilẹyin lori Android Version rẹ. Iwọn ipele API ti o kere julọ %1$d beere fun.</string>
+    <!-- Navigation Drawer Menu -->
+    <string name="nav_main">Yan Iṣẹ</string>
+    <string name="nav_diary">Iwe ito iṣẹlẹ ojojumọ</string>
+    <string name="nav_stats">Àwọn ìṣirò</string>
+    <string name="nav_map">Àwòrán ayé</string>
+    <string name="nav_add_activity">Fi iṣẹ kun</string>
+    <string name="nav_show_deleted">Fihan Paarẹ</string>
+    <string name="nav_hide_deleted">Tọju Paarẹ</string>
+    <string name="nav_activity_manager">Ṣatunkọ Awọn iṣẹ</string>
+    <string name="nav_settings">Ètò</string>
+    <string name="nav_about">Nipa</string>
+    <string name="desc_activity_color">Iṣiṣe iṣẹ-ṣiṣe</string>
+    <string name="desc_activity_hint">Akọle iṣẹ</string>
+    <string name="desc_activity_select">Yan iṣẹ lọwọlọwọ&#8230;</string>
+    <!-- -->
+    <string name="activity_image_description">Aworan fun aṣayan iṣẹ</string>
+    <string name="contentDesc_logo">Logo ti activitydiary</string>
+    <string name="drawer_open">Ṣi i lilọ kiri</string>
+    <string name="drawer_close">Pa lilọ kiri de</string>
+    <!-- Notification Channels -->
+    <string name="notif_channel_current_activity_name">Iṣẹ lọwọlọwọ</string>
+    <string name="notif_channel_current_activity_desc">Fi ifitonileti fun iṣẹ ti o n ṣe lọwọlọwọ</string>
+    <!-- settings -->
+    <string name="setting_view_category">Wo</string>
+    <string name="setting_behavior_category">Iwa</string>
+    <string name="setting_location_category">Ipò</string>
+    <string name="setting_images_category">Awọn aworan</string>
+    <string name="setting_backup_category">Afẹyinti</string>
+    <string name="setting_condition_category">Awọn ipo</string>
+    <string name="setting_datetime_format">Ọjọ kika</string>
+    <string name="setting_datetime_format_summary">\@ string / default_datetime_format</string>
+    <string name="setting_datetime_format_description">Ifihan kika ti ọjọ ati akoko fun ibẹrẹ iṣẹ. Awọn ọna kika ọna kika jẹ yyy-MM-dd HH: mm tabi dd.MM. hh: mm</string>
+    <string name="setting_duration_format">Duration format</string>
+    <string name="setting_duration_format_summary_dynamic">Dynamically adjust the format depending on the duration.</string>
+    <string name="setting_duration_format_summary_precise">Always show durations with seconds resolution.</string>
+    <string name="setting_duration_format_summary_nodays">Show durations with seconds resolution but don\'t replace 24h by 1 day.</string>
+    <string name="setting_duration_format_summary_hour_min">Always show durations with hours and minutes.</string>
+    <string name="setting_duration_format_description">Display format of the time durations.</string>
+    <string name="setting_auto_select_new">Yan awọn iṣẹ titun</string>
+    <string name="setting_auto_select_new_summary_active">A iṣẹ tuntun ti a ṣẹda ni a yan bi o ti yan lọwọ titun</string>
+    <string name="setting_auto_select_new_summary_inactive">Ṣiṣẹda awọn oniṣẹ tuntun ko ni ipa ni iṣẹ ṣiṣe lọwọlọwọ</string>
+    <string name="setting_show_cur_activitiy_notification">Ifitonileti fun aṣayan iṣẹ lọwọlọwọ</string>
+    <string name="setting_show_cur_activitiy_notification_summary_active">Iṣẹ lọwọlọwọ yoo han bi ifitonileti</string>
+    <string name="setting_show_cur_activitiy_notification_summary_inactive">Ko si ifitonileti fun iṣẹ ṣiṣe lọwọlọwọ yoo han</string>
+    <string name="setting_silent_renotification">Silent notifications</string>
+    <string name="setting_silent_reconfication_summary_active">No alert on change of notification text</string>
+    <string name="setting_silent_reconfication_summary_inactive">Agressive alerts (with sound and vibration as configured) on each change of notification text</string>
+    <string name="setting_disable_on_click">Tẹ láti dá iṣẹ́ dúró</string>
+    <string name="setting_disable_on_click_summary_active">Current activity can be terminated by clicking the activity label</string>
+    <string name="setting_disable_on_click_summary_inactive">Current activity can only be terminated by selecting a new one</string>
+    <string name="setting_enable_acra">Iroyin jamba</string>
+    <string name="setting_acra_enabled">Firanṣẹ lori awọn ijamba</string>
+    <string name="setting_acra_disabled">Ma ṣe fi iroyin ranṣẹ lori awọn ijamba</string>
+    <string name="setting_use_location">Location Service</string>
+    <string name="setting_use_location_summary">%1$s used to track device location</string>
+    <string name="setting_use_location_off_summary">User location not tracked at all</string>
+    <string name="perm_location_xplain">The configured option to track your location requires permission to do access the location of your device &#8230;</string>
+    <string name="setting_storage_folder">Apakan Idanilenu aworan</string>
+    <string name="setting_storage_folder_summary">Ṣe awọn akojọ aṣayan iṣẹ-ṣiṣe ni itọsọna %1$s</string>
+    <string name="setting_storage_folder_description">Ilana lati tọju awọn fọto ṣiṣe</string>
+    <string name="default_storage_folder">ActivityDiary</string>
+    <string name="setting_tag_images">Metadata</string>
+    <string name="setting_tag_yes">Kọ aṣayan iṣẹ-ṣiṣe si aṣajuwe UserComment ti awọn aworan titun</string>
+    <string name="setting_tag_no">Maṣe fi ọwọ kan awọn afihan ti awọn aworan titun ti EXIF</string>
+    <!-- Conditions -->
+    <string name="pref_cond_off">PA</string>
+    <string name="setting_cond_alpha">Iwọn ti itumọ</string>
+    <string name="setting_cond_alpha_summary">Isọtọ ti itọnisọna ni o ni iwuwo ti %1$s lori awọn iṣẹ ṣiṣe atẹle nigbamii</string>
+    <string name="setting_cond_alpha_not_used_summary">Aṣeyọri ti itọnisọna ko lo fun ṣiṣe iyanju awọn iṣẹ to tẹle</string>
+    <string name="setting_cond_predecessor">Akopọ aṣayan iṣẹ</string>
+    <string name="setting_cond_predecessor_summary">Aṣayan aṣayan iṣẹ ni iwe-iṣẹlẹ ni o ni iwuwo ti %1$s lori awọn iṣẹ ṣiṣe atẹle</string>
+    <string name="setting_cond_predecessor_not_used_summary">Aṣayan isẹ ni diary ko lo fun ni iyanju awọn iṣẹ to tẹle</string>
+    <string name="setting_cond_paused">Activity interruptions</string>
+    <string name="setting_cond_paused_summary">Just stopped activities have a weight of %1$s on suggested next activities</string>
+    <string name="setting_cond_paused_not_used_summary">Just stopped activities are not used for suggesting next activities</string>
+    <string name="setting_cond_occurrence">Iṣẹ iṣe iṣẹlẹ</string>
+    <string name="setting_cond_occurrence_summary">Igbesẹ aṣayan iṣẹ-ṣiṣe ninu diary ni o ni iwuwo ti %1$s lori awọn iṣẹ ṣiṣe atẹle</string>
+    <string name="setting_cond_occurrence_not_used_summary">Aṣayan išẹ-ṣiṣe ninu iwe ito iṣẹlẹ ojojumọ ko lo fun ni imọran awọn iṣẹ to tẹle</string>
+    <string name="setting_cond_daytime">Oju mọmọ</string>
+    <string name="setting_cond_daytime_summary">Ojo ti awọn iṣẹ inu iwe-kikọ ni o ni idiwọn %1$s lori awọn iṣẹ ṣiṣe ti o tẹle</string>
+    <string name="setting_cond_daytime_not_used_summary">Ojoojumọ awọn iṣẹ ti o wa ninu iwe ito iṣẹlẹ ojojumọ ko lo fun imọran awọn iṣẹ ti o tẹle</string>
+    <string name="pref_location_age">Request a location update every %1$s minutes</string>
+    <string name="setting_location_age">Update period</string>
+    <string name="pref_location_dist">Request a location update every %1$s meters</string>
+    <string name="setting_location_dist">Update distance</string>
+    <string name="setting_expert">Awọn eto imọran</string>
+    <string name="setting_export">Wọle si ipamọ data</string>
+    <string name="setting_import">Wọle data ipilẹ</string>
+    <string name="setting_export_summary">Ṣe daakọ ẹda ti database inulọwọ ni faili kan fun afẹyinti</string>
+    <string name="setting_import_summary">Mu faili afẹyinti pada si database ti isiyi</string>
+    <string name="db_export_error">Ko kùn lati gbe ipamọ data si %1$s</string>
+    <string name="db_export_success">Aaye data ti a fiwe si %1$s</string>
+    <string name="db_export_name_suggestion">ActivityDiary_Export</string>
+    <string name="db_export_selection">Yan faili fun ikọja</string>
+    <string name="db_import_error">Ko kùn lati gbe %1$s wọle</string>
+    <string name="db_import_success">%1$s ni ifijišẹ wọle</string>
+    <string name="db_import_selection">Yan faili lati gbe wọle</string>
+    <!-- titles -->
+    <string name="activity_title_edit">Ṣatunkọ</string>
+    <string name="activity_title_edit_new">Iṣẹ titun</string>
+    <string name="activity_title_manage_activities">Ṣakoso awọn iṣẹ</string>
+    <string name="activity_title_history">Iwe ito iṣẹlẹ ojojumọ</string>
+    <string name="activity_title_history_detail">Akọsilẹ kikọsi</string>
+    <string name="activity_subtitle_main">Kini o n ṣe?</string>
+    <string name="activity_title_about">Nipa</string>
+    <string name="activity_title_stats">Statistics</string>
+    <string name="activity_title_map">Map</string>
+    <string name="activity_title_settings">Ètò</string>
+    <string name="activity_title_no_selected_act">&lt;No Activity&gt;</string>
+    <string name="dialog_title_note">Akiyesi</string>
+    <string name="activities">Activities</string>
+    <string name="fragment_detail_stats_title">Statistics</string>
+    <string name="fragment_detail_note_title">Note</string>
+    <string name="fragment_detail_pictures_title">Pictures</string>
+    <!-- actions -->
+    <string name="action_delete">Pa iṣẹ ṣiṣe</string>
+    <string name="action_diary_entry_delete">Pa titẹ sii</string>
+    <string name="action_store">Fipamọ</string>
+    <string name="action_filter">Ajọwe</string>
+    <string name="action_undo">UNDO</string>
+    <string name="search_hint">Iwadi iwadi&#8230;</string>
+    <string name="search_description">Diaryactivities</string>
+    <!-- dialog -->
+    <string name="dlg_ok">O DARA</string>
+    <string name="dlg_cancel">Fagilee</string>
+    <string name="dlg_delete_image_title">Jẹrisi piparẹ</string>
+    <string name="dlg_delete_image_text">Ṣe o da ọ loju pe o fẹ yọ aworan yii kuro ni titẹsi iṣẹ ṣiṣelọwọ?</string>
+    <string name="dlg_undelete_activity_title">Bọsipọ aṣayan iṣẹ</string>
+    <string name="dlg_undelete_activity_text">Yoo ṣe iṣẹ naa %1$s ki o si wa ni ibẹrẹ lẹẹkansi?</string>
+    <string name="statistics_others">Others</string>
+    <!-- main view -->
+    <string name="duration_description">Niwon %1$s</string>
+    <string name="just_now">ni bayi</string>
+    <string name="few_seconds">iṣẹju diẹ</string>
+    <plurals name="seconds_short">
+        <item quantity="other">%d iṣẹju-aaya</item>
+    </plurals>
+    <plurals name="minutes_short">
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="hours_short">
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="days">
+        <item quantity="other">%d Ọjọ</item>
+    </plurals>
+    <string name="avg_duration_description">Average duration: %1$s</string>
+    <string name="last_done_description">Last start: %1$s</string>
+    <string name="camera_error">Nkankan kan ti ko tọ si ibi. Ko le tọju aworan.</string>
+    <string name="no_active_activity_error">Lati ṣe iṣe yii o jẹ dandan lati yan aṣayan iṣẹ akọkọ</string>
+    <string name="contentDesc_pictureEntry">Picture assigned to the diary entry</string>
+    <!-- edit view -->
+    <string name="error_name_already_used">Iṣẹ ṣiṣe pẹlu orukọ %1$s tẹlẹ wa</string>
+    <string name="tooltip_quickfix_btn_edit_existing">Kọ satunkọ lọwọlọwọ ati ṣiṣi ṣiṣe ṣiṣe tẹlẹ pẹlu orukọ kanna dipo</string>
+    <string name="error_name_already_used_in_deleted">Iṣẹ-ṣiṣe ti a ti paarẹ pẹlu orukọ %1$s tẹlẹ wa</string>
+    <string name="tooltip_quickfix_btn_rename_deleted">Lorukọ iṣẹ-ṣiṣe ti o paarẹ pẹlu orukọ kanna lati yanju ija</string>
+    <string name="tooltip_quickfix_btn_undelete_existing">Iṣẹ ṣiṣe alaiṣẹ pẹlu orukọ kanna</string>
+    <string name="error_name_similar">New activity name similar to %1$s</string>
+    <string name="recover_activity_toast">Iṣẹ iṣẹ atunṣe %1$s. O ti tun yan yan lẹẹkansi.</string>
+    <string name="renamed_deleted_activity_toast">Ṣe atunṣe aṣayan iṣẹ ti a ti tẹlẹ tẹlẹ %1$s.</string>
+    <string name="edit_existing_activity_toast">Nisisiyi ṣiṣatunkọ iṣẹ ṣiṣe to wa pẹlu orukọ %1$s.</string>
+    <!-- history -->
+    <string name="default_datetime_format">yyyy.MM.dd HH: mm</string>
+    <string name="date_format">yyyy.MM.dd</string>
+    <string name="time_format">HH: mm</string>
+    <string name="history_start">Start: %1$s</string>
+    <string name="history_end">End: %1$s (%2$s)</string>
+    <string name="desc_start_date">Ọjọ ibẹrẹ</string>
+    <string name="desc_start_time">Akoko akoko</string>
+    <string name="desc_end_date">Ọjọ ipari</string>
+    <string name="desc_end_time">Ipari akoko</string>
+    <string name="history_detail_start">Start</string>
+    <string name="history_detail_end">End</string>
+    <string name="adjust_adjacent_times">Ṣatunṣe awọn titẹ sii iwe-ẹri agbegbe</string>
+    <string name="constraint_positive_duration">Iṣẹ naa yoo bẹrẹ nigbagbogbo ṣaaju ki o to pari.</string>
+    <string name="search_notes">Wá \'%1$s\' nínú àwọn àkọsílẹ&#x2026;</string>
+    <string name="search_diary">Wá \'%1$s\' nínú gbogbo ààyè&#x2026;</string>
+    <string name="search_date">Search \'%1$s\' in dates&#x2026;</string>
+    <string name="wrongFormat">Please enter date in correct format!</string>
+    <!-- Map -->
+    <string name="no_map_data_message">No data to show. Enable location services in the settings.</string>
+    <!-- statistics -->
+    <string name="earlier">earlier</string>
+    <string name="later">later</string>
+    <string name="day_format">E, M.dd.yy</string>
+    <string name="week_format">yyyy \'Week\' ww</string>
+    <string name="month_format">MMMM yyyy</string>
+    <string name="year_format">yyyy</string>
+    <!-- relative dates -->
+    <string name="today">Loni</string>
+    <string name="yesterday">Lana</string>
+    <string name="lastWeek">Ose ti o koja</string>
+    <!-- ACRA crash reporting -->
+    <string name="crash_dialog_text">Aṣiṣe ti ko ni airotẹlẹ ṣẹlẹ laya ohun elo lati da. Jọwọ ṣe iranlọwọ fun wa ni atunṣe nipa fifiranṣẹ aṣiṣe wa, gbogbo ohun ti o ni lati ṣe jẹ tẹ Dara.</string>
+    <string name="crash_dialog_comment_prompt">O le fi awọn ọrọ rẹ kun nipa iṣoro naa ni isalẹ:</string>
+    <string name="crash_dialog_ok_toast">E dupe. Jowo fi imeeli ti a ti pese silẹ lẹhin ti o ṣayẹwo awọn akoonu rẹ.</string>
+    <!-- Privacy Policy -->
+    <string name="privacy_text">ActivityDiary is a free, libre and open source application to track your activities. This privacy policy applies to this Android application and describes what data is stored and processed by the ActivityDiary.</string>
+    <string name="privacy_last_update">Last updated December 22, 2018</string>
+    <string name="privacy_intro_title">Introduction</string>
+    <string name="privacy_intro_text1">Developers of ActivityDiary, we (or “us” or “our”) respect the privacy of our users (“user” or “you”). As the aim of this application is to keep a record of your activites a lot of sensitive personal information is collected and stored. Nevertheless is this your data and you have full control over it. This Privacy Policy explains how the ActivityDiary application (the “Application”) collects, uses, discloses, and safeguards your information. Our names can be extracted from the meta data in the git repositories and within the Application.</string>
+    <string name="privacy_intro_text2">Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Application and remove it from your device.</string>
+    <string name="privacy_intro_text3">We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the “Last updated” date of this Privacy Policy.</string>
+    <string name="privacy_intro_text4">You are encouraged to periodically review this Privacy Policy to stay informed of updates. You will be deemed to have been made aware of, will be subject to, and will be deemed to have accepted the changes in any revised Privacy Policy by your continued use of the Application after the date such revised Privacy Policy is posted.</string>
+    <string name="privacy_intro_text5">This Privacy Policy does not apply to the third-party online/mobile store from which you install the Applications or make payments, which may also collect and use data about you. We are not responsible for any of the data collected by any such third party.</string>
+    <string name="privacy_what_title">What data is processed and stored?</string>
+    <string name="privacy_what_subTitle1">Activity Data</string>
+    <string name="privacy_what_subText1a">The data you enter to record your activities, including the date and time of start and end of the activity, combined with formatting, notes, pictures and relationships between different activites you attach to those activites is stored. Deleting entries like activities or pictures doesn\'t completely remove them from the database but only hides them.</string>
+    <string name="privacy_what_subTitle2">Geo-Location Information (ACCESS_FINE_LOCATION, GPS)</string>
+    <string name="privacy_what_subText2a">If configured the application accesses location-based information from your mobile device to relate acitivites to location and provide activity suggestions based on location information. If you wish to change ActivityDiarys access or permissions, you may do so in your device’s settings or disable the use of location services in the applications settings. Note that this does not influence or remove the already collected location data.</string>
+    <string name="privacy_what_subTitle3">Device storage (WRITE_EXTERNAL_STORAGE)</string>
+    <string name="privacy_what_subText3a">Storage and retreival of backups, photos and other files you attach to your activity diary need access to Androids \"external storage\" / SD card.</string>
+    <string name="privacy_what_subTitle4">Camera</string>
+    <string name="privacy_what_subText4a">The application enables you to take photos with your devices\' camera and attach them to your activity diary. This is the only usage of the camera permission.</string>
+    <string name="privacy_what_subTitle5">Network state (ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)</string>
+    <string name="privacy_what_subText5a">Network and WIFI state is stored to correlate activities to those data and to propose and set next activites based on the current state.</string>
+    <string name="privacy_what_subTitle6">Crash Reporting</string>
+    <string name="privacy_what_subText6a">In case of a program fault (crash) the application prepares a report that helps us to improve the behavior of the application. This report contains a lot of technical data about your device and operating system, the complete preferences of the application and the trace of program steps that was exectued right before the crash. The hardware of your device including but not limited to screen size and resolution, the manufacturer, the language setting and versions of the operating system and application are identifiable. The prepared report is not transmitted automatically, but shared to your email application in a newly composed email that you - at your own will - can send to us or whomever you want. Protecting the data during transmission by using encrypted email transfer is under responsibility of you and your mail service provider. We highly recommend to thoroughfully review the report and remove all data you don\'t understand and/or don\'t want to share.</string>
+    <string name="privacy_what_subText6b">As the used media is email you will disclose your name, email address, and several other technical data like IP address and email service provider by transmitting a crash report. We will not use this information for anything else than contacting you about the crash.</string>
+    <string name="privacy_what_subText6c">Anonymous extracts of the report that do not allow your indentification might be used in the public issue tracker for documenting the crash and tracking the rework.</string>
+    <string name="privacy_what_subText6d">Additional to this report prepared by the application your operating system or services on you device might transmit crash or usage reports, but those are not part of ActivityDiary, not covered by this privacy policy and under your own responsibility.</string>
+    <string name="privacy_why_title">Why does the application store data?</string>
+    <string name="privacy_why_text1">The Applications is designed to create a record of your activites. This is achieved by selecting the current activities manually or automatically, based on evaluation of data entered by you or collected by your device. The data you enter into the application is stored for later retreival by the user. The application stores and evaluates data of different sensors of your device to suggest or even automatically select the next activities. No data is collected, transmitted or stored that is not required for its intended functionality.</string>
+    <string name="privacy_why_text2">When you use the Application, your personal information is stored and evaluated locally on your device and not transmitted to any organization or company without your explicity request.</string>
+    <string name="privacy_why_text3">The stored data can be deleted by removing the application and deleting the backups created by you and backup mechanisms of your device.</string>
+    <string name="privacy_how_title">How is the data protected?</string>
+    <string name="privacy_how_text1">The Application store unencrypted data locally on the device it is executed on. You are responsible to protect the stored data from unauthorized access. We highly recommend to protect your device with a strong password and even encrypt your devices\' storage. Backups created by the application itself or any device backup mechanism also need to be protected by you in a similar fashion.</string>
+    <string name="privacy_security_title">Security of your information</string>
+    <string name="privacy_security_text">We use the mechanisms provided by the Android framework to protect your personal information from other applications on your device. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data protection can be guaranteed against any interception or other type of misuse. Therefore, we cannot guarantee complete security of you provide personal information.</string>
+    <string name="privacy_rights_title">Your rights</string>
+    <string name="privacy_rights_text">At any time and free of cost you have the right to ask us about which data we store about you. You can always request for correction or removal of personal data or restrict the use of your data.</string>
+    <string name="privacy_contact_title">Contact us</string>
+    <string name="privacy_contact_text">If you have questions or comments about this Privacy Policy, please contact us at:</string>
+</resources>
