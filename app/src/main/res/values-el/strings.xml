@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ActivityDiary
+  ~
+  ~ Copyright (C) 2017-2018 Raphael Mack http://www.raphael-mack.de
+  ~ Copyright (C) 2018 Bc. Ondrej Janitor
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="app_name">Ημερολόγιο δραστηριοτήτων</string>
+    <string name="about_text_version">έκδοση <b>%1$s</b></string>
+    <string name="about_text_intro">Ένα ημερολόγιο για κάθε είδους δραστηριότητες - οργανώστε τα καθήκοντά σας με ευκίνητο τρόπο και θυμηθείτε εάν κάτι αναμένεται να επαναληφθεί.</string>
+    <string name="about_text_licence_h">Αδεια</string>
+    <string name="about_text_licence"><![CDATA[%1$s είναι ελεύθερο λογισμικό: Επιτρέπεται η αναδιανομή ή / και τροποποίησή του υπό τους όρους της <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License</a>]]></string>
+    <string name="about_text_license_2">Αυτό το πρόγραμμα διανέμεται με την ελπίδα ότι θα είναι χρήσιμο, αλλά ΧΩΡΙΣ ΚΑΜΙΑ ΕΓΓΥΗΣΗ. χωρίς ακόμη και την σιωπηρή εγγύηση ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ή ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Για περισσότερες λεπτομέρειες, ανατρέξτε στην άδεια GNU General Public License.</string>
+    <string name="about_text_privacy_h">Privacy Policy</string>
+    <string name="about_text_privacy"><![CDATA[%1$s and its authors have a deep interest to respect your privacy. The nature of this app is to track and store your activites and where and how you do them. Nevertheless it is your data in your hands and is not transmitted to any server or external party by the app without your explicit request. Read the full <a href=\"de.rampro.activitydiary.privacy_policy://show\">privacy policy</a>.]]></string>
+    <string name="about_text_contact_h">Επικοινωνία</string>
+    <string name="about_text_contact"><![CDATA[Για τα σφάλματα και τις προτάσεις χρησιμοποιήστε το τεκμήριο <a href="https://github.com/ramack/ActivityDiary/issues">πρόβλημα</a>, κατά προτίμηση στην αγγλική γλώσσα.]]></string>
+    <string name="about_text_contact_2"><![CDATA[Ο πηγαίος κώδικας μπορεί να βρεθεί στο <a href="https://github.com/ramack/ActivityDiary">Github</a>.]]></string>
+    <string name="about_text_support_h">Υποστήριξη</string>
+    <string name="about_text_support"><![CDATA[Σε περίπτωση που θέλετε να υποστηρίξετε την ανάπτυξη %1$s εξετάστε το ενδεχόμενο να συζητήσετε <a href="https://github.com/ramack/ActivityDiary/issues">θέμα στο github</a>, μεταφράζοντας σε <a href="https://crowdin.com/project/activitydiary">ομάδες</a> ή δωρεά σε <a href="https://liberapay.com/ActivityDiary/">Liberapay</a>.]]></string>
+    <string name="about_text_cont_h">Συνεισφέροντες</string>
+    <string name="about_text_cont_2">Ανυπομονούμε να αναφέρουμε και το όνομά σας σε αυτή τη λίστα.</string>
+    <string name="about_text_lib_h">Βιβλιοθήκες</string>
+    <string name="about_text_lib">Οι ακόλουθες βιβλιοθήκες χρησιμοποιούνται από αυτήν την εφαρμογή και έχουν άδεια χρήσης με τις άδειες χρήσης:</string>
+    <string name="perm_write_external_storage_xplain">Η αποθήκευση των φωτογραφιών απαιτεί άδεια. 123_7_0_321 |</string>
+    <string name="unsupported_on_api_level">Αυτή η λειτουργία δεν υποστηρίζεται στην έκδοση Android. Ελάχιστο επίπεδο API %1$d απαιτείται.</string>
+    <!-- Navigation Drawer Menu -->
+    <string name="nav_main">Επιλέξτε Δραστηριότητα</string>
+    <string name="nav_diary">Ημερολόγιο</string>
+    <string name="nav_stats">Statistics</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_add_activity">Προσθήκη δραστηριότητας</string>
+    <string name="nav_show_deleted">Εμφάνιση διαγραμμένων</string>
+    <string name="nav_hide_deleted">Απόκρυψη διαγραμμένων</string>
+    <string name="nav_activity_manager">Επεξεργασία δραστηριοτήτων</string>
+    <string name="nav_settings">Ρυθμίσεις</string>
+    <string name="nav_about">Σχετικά με</string>
+    <string name="desc_activity_color">Χρώμα δραστηριότητας</string>
+    <string name="desc_activity_hint">Τίτλος δραστηριότητας</string>
+    <string name="desc_activity_select">Επιλέξτε τρέχουσα δραστηριότητα&#8230;</string>
+    <!-- -->
+    <string name="activity_image_description">Εικόνα για δραστηριότητα</string>
+    <string name="contentDesc_logo">Λογότυπο του τμήματος δραστηριότητας</string>
+    <string name="drawer_open">Άνοιγμα πλοήγησης</string>
+    <string name="drawer_close">Κλείσιμο πλοήγησης</string>
+    <!-- Notification Channels -->
+    <string name="notif_channel_current_activity_name">Τρεχων ΔΡΑΣΤΗΡΙΟΤΗΤΑ</string>
+    <string name="notif_channel_current_activity_desc">Εμφάνιση ειδοποίησης για τη δραστηριότητα που κάνετε αυτήν τη στιγμή</string>
+    <!-- settings -->
+    <string name="setting_view_category">Θέα</string>
+    <string name="setting_behavior_category">η ΣΥΜΠΕΡΙΦΟΡΑ</string>
+    <string name="setting_location_category">Location</string>
+    <string name="setting_images_category">Εικόνες</string>
+    <string name="setting_backup_category">Αντιγράφων ασφαλείας</string>
+    <string name="setting_condition_category">Συνθήκες</string>
+    <string name="setting_datetime_format">Μορφή ημερομηνίας</string>
+    <string name="setting_datetime_format_summary">\@ string / default_datetime_format</string>
+    <string name="setting_datetime_format_description">Εμφάνιση μορφής εμφάνισης της ημερομηνίας και ώρας για την έναρξη μιας δραστηριότητας. Οι συνήθεις μορφότυποι είναι yyyy-MM-dd HH: mm ή dd.MM. hh: mm</string>
+    <string name="setting_duration_format">Duration format</string>
+    <string name="setting_duration_format_summary_dynamic">Dynamically adjust the format depending on the duration.</string>
+    <string name="setting_duration_format_summary_precise">Always show durations with seconds resolution.</string>
+    <string name="setting_duration_format_summary_nodays">Show durations with seconds resolution but don\'t replace 24h by 1 day.</string>
+    <string name="setting_duration_format_summary_hour_min">Always show durations with hours and minutes.</string>
+    <string name="setting_duration_format_description">Display format of the time durations.</string>
+    <string name="setting_auto_select_new">Επιλέξτε νέες δραστηριότητες</string>
+    <string name="setting_auto_select_new_summary_active">Μια πρόσφατα δημιουργηθείσα δραστηριότητα επιλέγεται άμεσα ως νέα ενεργή</string>
+    <string name="setting_auto_select_new_summary_inactive">Η δημιουργία νέων δραστηριοτήτων δεν επηρεάζει την τρέχουσα ενεργή δραστηριότητα</string>
+    <string name="setting_show_cur_activitiy_notification">Ειδοποίηση για την τρέχουσα δραστηριότητα</string>
+    <string name="setting_show_cur_activitiy_notification_summary_active">Η τρέχουσα δραστηριότητα εμφανίζεται ως ειδοποίηση</string>
+    <string name="setting_show_cur_activitiy_notification_summary_inactive">Δεν εμφανίζεται καμία ειδοποίηση για την τρέχουσα δραστηριότητα</string>
+    <string name="setting_silent_renotification">Silent notifications</string>
+    <string name="setting_silent_reconfication_summary_active">No alert on change of notification text</string>
+    <string name="setting_silent_reconfication_summary_inactive">Agressive alerts (with sound and vibration as configured) on each change of notification text</string>
+    <string name="setting_disable_on_click">Terminate activity by click</string>
+    <string name="setting_disable_on_click_summary_active">Current activity can be terminated by clicking the activity label</string>
+    <string name="setting_disable_on_click_summary_inactive">Current activity can only be terminated by selecting a new one</string>
+    <string name="setting_enable_acra">Αναφορά σφαλμάτων</string>
+    <string name="setting_acra_enabled">Αποστολή αναφορών σε συντριβές</string>
+    <string name="setting_acra_disabled">Μην στέλνετε αναφορές σε συντριβές</string>
+    <string name="setting_use_location">Location Service</string>
+    <string name="setting_use_location_summary">%1$s used to track device location</string>
+    <string name="setting_use_location_off_summary">User location not tracked at all</string>
+    <string name="perm_location_xplain">The configured option to track your location requires permission to do access the location of your device &#8230;</string>
+    <string name="setting_storage_folder">Φάκελος αποθήκευσης εικόνων</string>
+    <string name="setting_storage_folder_summary">Αποθήκευση φωτογραφιών δραστηριότητας στον κατάλογο %1$s</string>
+    <string name="setting_storage_folder_description">Κατάλογος για την αποθήκευση των φωτογραφιών δραστηριότητας</string>
+    <string name="default_storage_folder">ActivityDiary</string>
+    <string name="setting_tag_images">Μεταδεδομένα</string>
+    <string name="setting_tag_yes">Γράψτε την τρέχουσα δραστηριότητα στην ετικέτα EXIF ​​UserComment των νέων εικόνων</string>
+    <string name="setting_tag_no">Μην αγγίζετε ετικέτες EXIF ​​για νέες εικόνες</string>
+    <!-- Conditions -->
+    <string name="pref_cond_off">ΜΑΚΡΙΑ ΑΠΟ</string>
+    <string name="setting_cond_alpha">Αλφαβητική ταξινόμηση</string>
+    <string name="setting_cond_alpha_summary">Η αλφαβητική ταξινόμηση έχει βάρος %1$s για προτεινόμενες επόμενες δραστηριότητες</string>
+    <string name="setting_cond_alpha_not_used_summary">Η αλφαβητική ταξινόμηση δεν χρησιμοποιείται για να προτείνει τις επόμενες δραστηριότητες</string>
+    <string name="setting_cond_predecessor">Ακολουθία δραστηριοτήτων</string>
+    <string name="setting_cond_predecessor_summary">Η ακολουθία δραστηριοτήτων στο ημερολόγιο έχει βάρος %1$s στις προτεινόμενες επόμενες δραστηριότητες</string>
+    <string name="setting_cond_predecessor_not_used_summary">Η ακολουθία δραστηριότητας στο ημερολόγιο δεν χρησιμοποιείται για να προτείνει τις επόμενες δραστηριότητες</string>
+    <string name="setting_cond_paused">Activity interruptions</string>
+    <string name="setting_cond_paused_summary">Just stopped activities have a weight of %1$s on suggested next activities</string>
+    <string name="setting_cond_paused_not_used_summary">Just stopped activities are not used for suggesting next activities</string>
+    <string name="setting_cond_occurrence">Παρουσίαση δραστηριότητας</string>
+    <string name="setting_cond_occurrence_summary">Η συχνότητα δραστηριότητας στο ημερολόγιο έχει βάρος %1$s στις προτεινόμενες επόμενες δραστηριότητες</string>
+    <string name="setting_cond_occurrence_not_used_summary">Η συχνότητα δραστηριότητας στο ημερολόγιο δεν χρησιμοποιείται για να υποδείξει τις επόμενες δραστηριότητες</string>
+    <string name="setting_cond_daytime">Ημέρα</string>
+    <string name="setting_cond_daytime_summary">Η ημερήσια διάρκεια των δραστηριοτήτων στο ημερολόγιο έχει βάρος %1$s για προτεινόμενες επόμενες δραστηριότητες</string>
+    <string name="setting_cond_daytime_not_used_summary">Η ημέρα των δραστηριοτήτων στο ημερολόγιο δεν χρησιμοποιείται για να προτείνει τις επόμενες δραστηριότητες</string>
+    <string name="pref_location_age">Request a location update every %1$s minutes</string>
+    <string name="setting_location_age">Update period</string>
+    <string name="pref_location_dist">Request a location update every %1$s meters</string>
+    <string name="setting_location_dist">Update distance</string>
+    <string name="setting_expert">Ρυθμίσεις ειδικού</string>
+    <string name="setting_export">Εξαγωγή βάσης δεδομένων</string>
+    <string name="setting_import">Εισαγωγή βάσης δεδομένων</string>
+    <string name="setting_export_summary">Αποθηκεύστε ένα αντίγραφο της τρέχουσας βάσης δεδομένων σε ένα αρχείο για δημιουργία αντιγράφων ασφαλείας</string>
+    <string name="setting_import_summary">Επαναφέρετε ένα αρχείο αντιγράφου ασφαλείας στην τρέχουσα βάση δεδομένων</string>
+    <string name="db_export_error">Αποτυχία εξαγωγής βάσης δεδομένων στο %1$s</string>
+    <string name="db_export_success">Εξάγεται βάση δεδομένων σε %1$s</string>
+    <string name="db_export_name_suggestion">ActivityDiary_Export</string>
+    <string name="db_export_selection">Επιλέξτε αρχείο για εξαγωγή</string>
+    <string name="db_import_error">Αποτυχία εισαγωγής %1$s</string>
+    <string name="db_import_success">%1$s εισαχθεί με επιτυχία</string>
+    <string name="db_import_selection">Επιλέξτε αρχείο για εισαγωγή</string>
+    <!-- titles -->
+    <string name="activity_title_edit">Επεξεργασία</string>
+    <string name="activity_title_edit_new">Νέα δραστηριότητα</string>
+    <string name="activity_title_manage_activities">Διαχείριση δραστηριοτήτων</string>
+    <string name="activity_title_history">Ημερολόγιο</string>
+    <string name="activity_title_history_detail">Καταχώρηση ημερολογίου</string>
+    <string name="activity_subtitle_main">Τι κάνεις?</string>
+    <string name="activity_title_about">Σχετικά με</string>
+    <string name="activity_title_stats">Statistics</string>
+    <string name="activity_title_map">Map</string>
+    <string name="activity_title_settings">Ρυθμίσεις</string>
+    <string name="activity_title_no_selected_act">&lt;No Activity&gt;</string>
+    <string name="dialog_title_note">Σημείωση</string>
+    <string name="activities">Activities</string>
+    <string name="fragment_detail_stats_title">Statistics</string>
+    <string name="fragment_detail_note_title">Note</string>
+    <string name="fragment_detail_pictures_title">Pictures</string>
+    <!-- actions -->
+    <string name="action_delete">Διαγραφή δραστηριότητας</string>
+    <string name="action_diary_entry_delete">Διαγραφή συμμετοχής</string>
+    <string name="action_store">Αποθηκεύσετε</string>
+    <string name="action_filter">Φίλτρο</string>
+    <string name="action_undo">ΑΝΑΙΡΕΣΗ</string>
+    <string name="search_hint">Αναζήτηση δραστηριότητας&#8230;</string>
+    <string name="search_description">Δραστηριότητες διάρκειας</string>
+    <!-- dialog -->
+    <string name="dlg_ok">Εντάξει</string>
+    <string name="dlg_cancel">Ματαίωση</string>
+    <string name="dlg_delete_image_title">Επιβεβαιώστε τη διαγραφή</string>
+    <string name="dlg_delete_image_text">Είστε βέβαιοι ότι θέλετε να καταργήσετε αυτήν την εικόνα από την τρέχουσα καταχώριση δραστηριότητας;</string>
+    <string name="dlg_undelete_activity_title">Ανάκτηση δραστηριότητας</string>
+    <string name="dlg_undelete_activity_text">Θα ανακτηθεί η δραστηριότητα %1$s και θα είναι και πάλι διαθέσιμη;</string>
+    <string name="statistics_others">Others</string>
+    <!-- main view -->
+    <string name="duration_description">Από το %1$s</string>
+    <string name="just_now">μόλις τώρα</string>
+    <string name="few_seconds">μερικά δευτερόλεπτα</string>
+    <plurals name="seconds_short">
+        <item quantity="one">%d δευτερόλεπτα</item>
+        <item quantity="other">%d δευτερόλεπτα</item>
+    </plurals>
+    <plurals name="minutes_short">
+        <item quantity="one">%d λεπτά</item>
+        <item quantity="other">%d λεπτά</item>
+    </plurals>
+    <plurals name="hours_short">
+        <item quantity="one">%d ώρες</item>
+        <item quantity="other">%d ώρες</item>
+    </plurals>
+    <plurals name="days">
+        <item quantity="one">%d Ημέρα</item>
+        <item quantity="other">%d ημέρες</item>
+    </plurals>
+    <string name="avg_duration_description">Average duration: %1$s</string>
+    <string name="last_done_description">Last start: %1$s</string>
+    <string name="camera_error">Κάτι πήγε στραβά εδώ. Δεν ήταν δυνατή η αποθήκευση εικόνας.</string>
+    <string name="no_active_activity_error">Για να εκτελέσετε αυτήν την ενέργεια, πρέπει πρώτα να επιλέξετε μια δραστηριότητα</string>
+    <string name="contentDesc_pictureEntry">Picture assigned to the diary entry</string>
+    <!-- edit view -->
+    <string name="error_name_already_used">Η δραστηριότητα με το όνομα %1$s υπάρχει ήδη</string>
+    <string name="tooltip_quickfix_btn_edit_existing">Απορρίψτε την τρέχουσα επεξεργασία και ανοίξτε την υπάρχουσα δραστηριότητα με το ίδιο όνομα</string>
+    <string name="error_name_already_used_in_deleted">Μια διαγραμμένη δραστηριότητα με το όνομα %1$s υπάρχει ήδη</string>
+    <string name="tooltip_quickfix_btn_rename_deleted">Μετονομάστε τη διαγραμμένη δραστηριότητα με το ίδιο όνομα για να επιλύσετε τη σύγκρουση</string>
+    <string name="tooltip_quickfix_btn_undelete_existing">Επαναίρεση της δραστηριότητας με το ίδιο όνομα</string>
+    <string name="error_name_similar">New activity name similar to %1$s</string>
+    <string name="recover_activity_toast">Ανακτημένη δραστηριότητα %1$s. Είναι πλέον επιλέξιμη πάλι.</string>
+    <string name="renamed_deleted_activity_toast">Μετονομάσατε την ήδη διαγραμμένη δραστηριότητα %1$s.</string>
+    <string name="edit_existing_activity_toast">Τώρα, επεξεργάζεστε την υπάρχουσα δραστηριότητα με το όνομα %1$s.</string>
+    <!-- history -->
+    <string name="default_datetime_format">dd/MM/yyy HH:mm</string>
+    <string name="date_format">dd/MM/yyyy</string>
+    <string name="time_format">HH: mm</string>
+    <string name="history_start">Start: %1$s</string>
+    <string name="history_end">End: %1$s (%2$s)</string>
+    <string name="desc_start_date">Ημερομηνία έναρξης</string>
+    <string name="desc_start_time">Ωρα έναρξης</string>
+    <string name="desc_end_date">Ημερομηνία λήξης</string>
+    <string name="desc_end_time">Τέλος χρόνου</string>
+    <string name="history_detail_start">Start</string>
+    <string name="history_detail_end">End</string>
+    <string name="adjust_adjacent_times">Ρυθμίστε τις γειτονικές καταχωρήσεις ημερολογίου</string>
+    <string name="constraint_positive_duration">Η δραστηριότητα αρχίζει πάντα πριν τελειώσει.</string>
+    <string name="search_notes">Search \'%1$s\' in notes&#x2026;</string>
+    <string name="search_diary">Search \'%1$s\' globally&#x2026;</string>
+    <string name="search_date">Search \'%1$s\' in dates&#x2026;</string>
+    <string name="wrongFormat">Please enter date in correct format!</string>
+    <!-- Map -->
+    <string name="no_map_data_message">No data to show. Enable location services in the settings.</string>
+    <!-- statistics -->
+    <string name="earlier">earlier</string>
+    <string name="later">later</string>
+    <string name="day_format">E, M.dd.yy</string>
+    <string name="week_format">yyyy \'Week\' ww</string>
+    <string name="month_format">MMMM yyyy</string>
+    <string name="year_format">yyyy</string>
+    <!-- relative dates -->
+    <string name="today">Σήμερα</string>
+    <string name="yesterday">Εχθές</string>
+    <string name="lastWeek">Την προηγούμενη εβδομάδα</string>
+    <!-- ACRA crash reporting -->
+    <string name="crash_dialog_text">Παρουσιάστηκε μη αναμενόμενο σφάλμα που αναγκάζει την εφαρμογή να σταματήσει. Παρακαλώ βοηθήστε μας να διορθώσουμε αυτό στέλνοντας μας δεδομένα σφάλματος, το μόνο που έχετε να κάνετε είναι να κάνετε κλικ στο OK.</string>
+    <string name="crash_dialog_comment_prompt">Μπορείτε να προσθέσετε τα σχόλιά σας σχετικά με το παρακάτω πρόβλημα:</string>
+    <string name="crash_dialog_ok_toast">Ευχαριστώ. Στείλτε την προετοιμασμένη ηλεκτρονική αλληλογραφία μετά την αναθεώρηση του περιεχομένου της</string>
+    <!-- Privacy Policy -->
+    <string name="privacy_text">ActivityDiary is a free, libre and open source application to track your activities. This privacy policy applies to this Android application and describes what data is stored and processed by the ActivityDiary.</string>
+    <string name="privacy_last_update">Last updated December 22, 2018</string>
+    <string name="privacy_intro_title">Introduction</string>
+    <string name="privacy_intro_text1">Developers of ActivityDiary, we (or “us” or “our”) respect the privacy of our users (“user” or “you”). As the aim of this application is to keep a record of your activites a lot of sensitive personal information is collected and stored. Nevertheless is this your data and you have full control over it. This Privacy Policy explains how the ActivityDiary application (the “Application”) collects, uses, discloses, and safeguards your information. Our names can be extracted from the meta data in the git repositories and within the Application.</string>
+    <string name="privacy_intro_text2">Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Application and remove it from your device.</string>
+    <string name="privacy_intro_text3">We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the “Last updated” date of this Privacy Policy.</string>
+    <string name="privacy_intro_text4">You are encouraged to periodically review this Privacy Policy to stay informed of updates. You will be deemed to have been made aware of, will be subject to, and will be deemed to have accepted the changes in any revised Privacy Policy by your continued use of the Application after the date such revised Privacy Policy is posted.</string>
+    <string name="privacy_intro_text5">This Privacy Policy does not apply to the third-party online/mobile store from which you install the Applications or make payments, which may also collect and use data about you. We are not responsible for any of the data collected by any such third party.</string>
+    <string name="privacy_what_title">What data is processed and stored?</string>
+    <string name="privacy_what_subTitle1">Activity Data</string>
+    <string name="privacy_what_subText1a">The data you enter to record your activities, including the date and time of start and end of the activity, combined with formatting, notes, pictures and relationships between different activites you attach to those activites is stored. Deleting entries like activities or pictures doesn\'t completely remove them from the database but only hides them.</string>
+    <string name="privacy_what_subTitle2">Geo-Location Information (ACCESS_FINE_LOCATION, GPS)</string>
+    <string name="privacy_what_subText2a">If configured the application accesses location-based information from your mobile device to relate acitivites to location and provide activity suggestions based on location information. If you wish to change ActivityDiarys access or permissions, you may do so in your device’s settings or disable the use of location services in the applications settings. Note that this does not influence or remove the already collected location data.</string>
+    <string name="privacy_what_subTitle3">Device storage (WRITE_EXTERNAL_STORAGE)</string>
+    <string name="privacy_what_subText3a">Storage and retreival of backups, photos and other files you attach to your activity diary need access to Androids \"external storage\" / SD card.</string>
+    <string name="privacy_what_subTitle4">Camera</string>
+    <string name="privacy_what_subText4a">The application enables you to take photos with your devices\' camera and attach them to your activity diary. This is the only usage of the camera permission.</string>
+    <string name="privacy_what_subTitle5">Network state (ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)</string>
+    <string name="privacy_what_subText5a">Network and WIFI state is stored to correlate activities to those data and to propose and set next activites based on the current state.</string>
+    <string name="privacy_what_subTitle6">Crash Reporting</string>
+    <string name="privacy_what_subText6a">In case of a program fault (crash) the application prepares a report that helps us to improve the behavior of the application. This report contains a lot of technical data about your device and operating system, the complete preferences of the application and the trace of program steps that was exectued right before the crash. The hardware of your device including but not limited to screen size and resolution, the manufacturer, the language setting and versions of the operating system and application are identifiable. The prepared report is not transmitted automatically, but shared to your email application in a newly composed email that you - at your own will - can send to us or whomever you want. Protecting the data during transmission by using encrypted email transfer is under responsibility of you and your mail service provider. We highly recommend to thoroughfully review the report and remove all data you don\'t understand and/or don\'t want to share.</string>
+    <string name="privacy_what_subText6b">As the used media is email you will disclose your name, email address, and several other technical data like IP address and email service provider by transmitting a crash report. We will not use this information for anything else than contacting you about the crash.</string>
+    <string name="privacy_what_subText6c">Anonymous extracts of the report that do not allow your indentification might be used in the public issue tracker for documenting the crash and tracking the rework.</string>
+    <string name="privacy_what_subText6d">Additional to this report prepared by the application your operating system or services on you device might transmit crash or usage reports, but those are not part of ActivityDiary, not covered by this privacy policy and under your own responsibility.</string>
+    <string name="privacy_why_title">Why does the application store data?</string>
+    <string name="privacy_why_text1">The Applications is designed to create a record of your activites. This is achieved by selecting the current activities manually or automatically, based on evaluation of data entered by you or collected by your device. The data you enter into the application is stored for later retreival by the user. The application stores and evaluates data of different sensors of your device to suggest or even automatically select the next activities. No data is collected, transmitted or stored that is not required for its intended functionality.</string>
+    <string name="privacy_why_text2">When you use the Application, your personal information is stored and evaluated locally on your device and not transmitted to any organization or company without your explicity request.</string>
+    <string name="privacy_why_text3">The stored data can be deleted by removing the application and deleting the backups created by you and backup mechanisms of your device.</string>
+    <string name="privacy_how_title">How is the data protected?</string>
+    <string name="privacy_how_text1">The Application store unencrypted data locally on the device it is executed on. You are responsible to protect the stored data from unauthorized access. We highly recommend to protect your device with a strong password and even encrypt your devices\' storage. Backups created by the application itself or any device backup mechanism also need to be protected by you in a similar fashion.</string>
+    <string name="privacy_security_title">Security of your information</string>
+    <string name="privacy_security_text">We use the mechanisms provided by the Android framework to protect your personal information from other applications on your device. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data protection can be guaranteed against any interception or other type of misuse. Therefore, we cannot guarantee complete security of you provide personal information.</string>
+    <string name="privacy_rights_title">Your rights</string>
+    <string name="privacy_rights_text">At any time and free of cost you have the right to ask us about which data we store about you. You can always request for correction or removal of personal data or restrict the use of your data.</string>
+    <string name="privacy_contact_title">Contact us</string>
+    <string name="privacy_contact_text">If you have questions or comments about this Privacy Policy, please contact us at:</string>
+</resources>

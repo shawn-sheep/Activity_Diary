@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ActivityDiary
+  ~
+  ~ Copyright (C) 2017-2018 Raphael Mack http://www.raphael-mack.de
+  ~ Copyright (C) 2018 Bc. Ondrej Janitor
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="app_name">Diario de actividad</string>
+    <string name="about_text_version">versión <b>%1$s</b></string>
+    <string name="about_text_intro">Un diario para cualquier tipo de actividades: organiza tus tareas de forma ágil y obtén recordatorios si se espera que ocurra algo nuevo.</string>
+    <string name="about_text_licence_h">Licencia</string>
+    <string name="about_text_licence"><![CDATA[%1$s es software libre: puede redistribuirlo y / o modificarlo bajo los términos de la <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">Licencia Pública General GNU</a>]]></string>
+    <string name="about_text_license_2">Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; sin siquiera la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Ver la Licencia Pública General de GNU para más detalles.</string>
+    <string name="about_text_privacy_h">Política de privacidad</string>
+    <string name="about_text_privacy"><![CDATA[%1$s y sus autores tienen un profundo interés por respetar su privacidad. La naturaleza de esta aplicación es rastrear y almacenar sus actividades y dónde y cómo las hace. Sin embargo, sus datos están en sus manos y no se transmiten a ningún servidor o a ningún partido externo por la aplicación sin su petición explícita. Leer la política de privacidad <a href=\"de.rampro.activitydiary.privacy_policy://show\">completa</a>.]]></string>
+    <string name="about_text_contact_h">Contacto</string>
+    <string name="about_text_contact"><![CDATA[Para errores y sugerencias utilizar el <a href="https://github.com/ramack/ActivityDiary/issues">tema tacker</a>, preferentemente en idioma Inglés.]]></string>
+    <string name="about_text_contact_2"><![CDATA[El código fuente se puede encontrar en <a href="https://github.com/ramack/ActivityDiary">Github</a>.]]></string>
+    <string name="about_text_support_h">Apoyo</string>
+    <string name="about_text_support"><![CDATA[En caso de que quiera apoyar el desarrollo de %1$s visite <a href="https://github.com/ramack/ActivityDiary/issues">temas en github</a>, traduciendo en <a href="https://crowdin.com/project/activitydiary">crowdin</a> o donación en <a href="https://liberapay.com/ActivityDiary/">Liberapay</a>.]]></string>
+    <string name="about_text_cont_h">Colaboradores</string>
+    <string name="about_text_cont_2">También esperamos mencionar su nombre en esta lista.</string>
+    <string name="about_text_lib_h">Bibliotecas</string>
+    <string name="about_text_lib">Esta aplicación utiliza las siguientes bibliotecas y tiene licencia bajo las licencias nombradas:</string>
+    <string name="perm_write_external_storage_xplain">Almacenar fotos requiere permiso para hacerlo &#8230;</string>
+    <string name="unsupported_on_api_level">Esta característica no es compatible con su versión de Android. Nivel mínimo de API %1$d necesario.</string>
+    <!-- Navigation Drawer Menu -->
+    <string name="nav_main">Seleccione la actividad</string>
+    <string name="nav_diary">Diario</string>
+    <string name="nav_stats">Estatísticas</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_add_activity">Agregar actividad</string>
+    <string name="nav_show_deleted">Mostrar eliminado</string>
+    <string name="nav_hide_deleted">Ocultar eliminado</string>
+    <string name="nav_activity_manager">Editar actividades</string>
+    <string name="nav_settings">Configuraciones</string>
+    <string name="nav_about">Acerca de</string>
+    <string name="desc_activity_color">Color de la actividad</string>
+    <string name="desc_activity_hint">Título de la actividad</string>
+    <string name="desc_activity_select">Elige la actividad actual&#8230;</string>
+    <!-- -->
+    <string name="activity_image_description">Imagen para la actividad</string>
+    <string name="contentDesc_logo">Logotipo de activitydiary</string>
+    <string name="drawer_open">Navegación abierta</string>
+    <string name="drawer_close">Cerrar navegación</string>
+    <!-- Notification Channels -->
+    <string name="notif_channel_current_activity_name">Actividad actual</string>
+    <string name="notif_channel_current_activity_desc">Mostrar notificación de la actividad que está realizando actualmente</string>
+    <!-- settings -->
+    <string name="setting_view_category">Ver</string>
+    <string name="setting_behavior_category">Comportamiento</string>
+    <string name="setting_location_category">Ubicación</string>
+    <string name="setting_images_category">Imágenes</string>
+    <string name="setting_backup_category">Apoyo</string>
+    <string name="setting_condition_category">Condiciones</string>
+    <string name="setting_datetime_format">Formato de fecha</string>
+    <string name="setting_datetime_format_summary">@string/default_datetime_format</string>
+    <string name="setting_datetime_format_description">Muestra el formato de la fecha y la hora para el inicio de una actividad. Los formatos habituales son aaaa-MM-dd HH: mm o dd.MM. hh: mm</string>
+    <string name="setting_duration_format">Formato de duración</string>
+    <string name="setting_duration_format_summary_dynamic">Ajuste dinámico dependiente de la duración.</string>
+    <string name="setting_duration_format_summary_precise">Siempre mostrar duración con resolución de segundos.</string>
+    <string name="setting_duration_format_summary_nodays">Mostrar duración con resolución de segundos pero sin remplazar 24h por 1 día.</string>
+    <string name="setting_duration_format_summary_hour_min">Siempre mostrar duración con horas y minutos.</string>
+    <string name="setting_duration_format_description">Mostrar formato de las duraciones de tiempo.</string>
+    <string name="setting_auto_select_new">Seleccione nuevas actividades</string>
+    <string name="setting_auto_select_new_summary_active">Una actividad recién creada se selecciona directamente como la nueva actividad activa</string>
+    <string name="setting_auto_select_new_summary_inactive">La creación de nuevas actividades no influye en la actividad actualmente activa</string>
+    <string name="setting_show_cur_activitiy_notification">Notificación de actividad actual</string>
+    <string name="setting_show_cur_activitiy_notification_summary_active">La actividad actual se muestra como notificación</string>
+    <string name="setting_show_cur_activitiy_notification_summary_inactive">No se muestra ninguna notificación para la actividad actual</string>
+    <string name="setting_silent_renotification">Notificaciones silenciosas</string>
+    <string name="setting_silent_reconfication_summary_active">No alertar al cambiar el texto de las notificaciones</string>
+    <string name="setting_silent_reconfication_summary_inactive">Alertas agresivas (con sonido y vibración configuradas) en cada cambio de texto de notificación</string>
+    <string name="setting_disable_on_click">Terminar actividad por clic</string>
+    <string name="setting_disable_on_click_summary_active">La actividad actual puede terminar haciendo clic en la etiqueta de actividad</string>
+    <string name="setting_disable_on_click_summary_inactive">La actividad actual sólo puede ser terminada seleccionando una nueva</string>
+    <string name="setting_enable_acra">Informes de fallas</string>
+    <string name="setting_acra_enabled">Enviar informes sobre fallas</string>
+    <string name="setting_acra_disabled">No envíe informes sobre fallas</string>
+    <string name="setting_use_location">Servicio de localización</string>
+    <string name="setting_use_location_summary">%1$s se utiliza para rastrear la ubicación del dispositivo</string>
+    <string name="setting_use_location_off_summary">Ubicación de usuario no rastreada en absoluto</string>
+    <string name="perm_location_xplain">La opción configurada para rastrear su ubicación requiere permiso para acceder a la ubicación de su dispositivo &#8230;</string>
+    <string name="setting_storage_folder">Carpeta de almacenamiento de imágenes</string>
+    <string name="setting_storage_folder_summary">Almacenar fotos de actividades en el directorio %1$s</string>
+    <string name="setting_storage_folder_description">Directorio para almacenar las fotos de la actividad</string>
+    <string name="default_storage_folder">ActivityDiary</string>
+    <string name="setting_tag_images">Metadata</string>
+    <string name="setting_tag_yes">Escriba la actividad actual en la etiqueta EXIF ​​UserComment de nuevas imágenes</string>
+    <string name="setting_tag_no">No toque las etiquetas EXIF ​​de imágenes nuevas</string>
+    <!-- Conditions -->
+    <string name="pref_cond_off">APAGADO</string>
+    <string name="setting_cond_alpha">Orden alfabético</string>
+    <string name="setting_cond_alpha_summary">La ordenación alfabética tiene un peso de %1$s en las próximas actividades sugeridas</string>
+    <string name="setting_cond_alpha_not_used_summary">La clasificación alfabética no se usa para sugerir actividades siguientes</string>
+    <string name="setting_cond_predecessor">Secuencia de actividad</string>
+    <string name="setting_cond_predecessor_summary">La secuencia de actividades en el diario tiene un peso de %1$s en las próximas actividades sugeridas</string>
+    <string name="setting_cond_predecessor_not_used_summary">La secuencia de actividades en el diario no se usa para sugerir las próximas actividades</string>
+    <string name="setting_cond_paused">Interrupciones de actividad</string>
+    <string name="setting_cond_paused_summary">Las actividades detenidas tienen un peso de %1$s en las siguientes actividades sugeridas</string>
+    <string name="setting_cond_paused_not_used_summary">Las actividades detenidas tienen un peso de 0 en las siguientes actividades sugeridas</string>
+    <string name="setting_cond_occurrence">Ocurrencia de la actividad</string>
+    <string name="setting_cond_occurrence_summary">La frecuencia de actividad en el diario tiene un peso de %1$s en las siguientes actividades sugeridas</string>
+    <string name="setting_cond_occurrence_not_used_summary">La frecuencia de la actividad en el diario no se usa para sugerir las próximas actividades</string>
+    <string name="setting_cond_daytime">Tiempo de día</string>
+    <string name="setting_cond_daytime_summary">El día de las actividades en el diario tiene un peso de %1$s en las próximas actividades sugeridas</string>
+    <string name="setting_cond_daytime_not_used_summary">El día de las actividades en el diario no se utiliza para sugerir las próximas actividades</string>
+    <string name="pref_location_age">Solicitar una actualización de ubicación cada %1$s minutos</string>
+    <string name="setting_location_age">Período de actualización</string>
+    <string name="pref_location_dist">Solicitar una actualización de ubicación cada %1$s minutos</string>
+    <string name="setting_location_dist">Actualizar distancia</string>
+    <string name="setting_expert">Configuración experta</string>
+    <string name="setting_export">Exportar base</string>
+    <string name="setting_import">Importar base de datos</string>
+    <string name="setting_export_summary">Almacene una copia de la base de datos actual en un archivo para respaldo</string>
+    <string name="setting_import_summary">Restaurar un archivo de copia de seguridad a la base de datos actual</string>
+    <string name="db_export_error">Error al exportar la base de datos a %1$s</string>
+    <string name="db_export_success">Base de datos exportada a %1$s</string>
+    <string name="db_export_name_suggestion">ActivityDiary_Export</string>
+    <string name="db_export_selection">Seleccionar archivo para exportar</string>
+    <string name="db_import_error">Error al importar %1$s</string>
+    <string name="db_import_success">%1$s importado con éxito</string>
+    <string name="db_import_selection">Seleccionar archivo para importar</string>
+    <!-- titles -->
+    <string name="activity_title_edit">Editar</string>
+    <string name="activity_title_edit_new">Nueva actividad</string>
+    <string name="activity_title_manage_activities">Administrar actividades</string>
+    <string name="activity_title_history">Diario</string>
+    <string name="activity_title_history_detail">Entrada del diario</string>
+    <string name="activity_subtitle_main">¿Qué estás haciendo?</string>
+    <string name="activity_title_about">Acerca de</string>
+    <string name="activity_title_stats">Estadísticas</string>
+    <string name="activity_title_map">Mapa</string>
+    <string name="activity_title_settings">Configuraciones</string>
+    <string name="activity_title_no_selected_act">&lt;No Activity&gt;</string>
+    <string name="dialog_title_note">Nota</string>
+    <string name="activities">Actividades</string>
+    <string name="fragment_detail_stats_title">Estadísticas</string>
+    <string name="fragment_detail_note_title">Nota</string>
+    <string name="fragment_detail_pictures_title">Imágenes</string>
+    <!-- actions -->
+    <string name="action_delete">Eliminar actividad</string>
+    <string name="action_diary_entry_delete">Eliminar la entrada</string>
+    <string name="action_store">Salvar</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_undo">DESHACER</string>
+    <string name="search_hint">Actividad de búsqueda&#8230;</string>
+    <string name="search_description">Actividades cotidianas</string>
+    <!-- dialog -->
+    <string name="dlg_ok">DE ACUERDO</string>
+    <string name="dlg_cancel">Cancelar</string>
+    <string name="dlg_delete_image_title">Confirmar la eliminación</string>
+    <string name="dlg_delete_image_text">¿Seguro que quieres eliminar esta imagen de la entrada de la actividad actual?</string>
+    <string name="dlg_undelete_activity_title">Recuperar actividad</string>
+    <string name="dlg_undelete_activity_text">¿Se recuperará la actividad %1$s y estará disponible nuevamente?</string>
+    <string name="statistics_others">Otros</string>
+    <!-- main view -->
+    <string name="duration_description">Desde %1$s</string>
+    <string name="just_now">justo ahora</string>
+    <string name="few_seconds">unos pocos segundos</string>
+    <plurals name="seconds_short">
+        <item quantity="one">%d segundos</item>
+        <item quantity="other">%d segundos</item>
+    </plurals>
+    <plurals name="minutes_short">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="hours_short">
+        <item quantity="one">%d h</item>
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="days">
+        <item quantity="one">%d día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <string name="avg_duration_description">Duración media: %1$s</string>
+    <string name="last_done_description">Última Actividad: %1$s</string>
+    <string name="camera_error">Algo salió mal aquí. No se pudo almacenar la imagen.</string>
+    <string name="no_active_activity_error">Para realizar esta acción, es necesario seleccionar una actividad primero</string>
+    <string name="contentDesc_pictureEntry">Imagen asignada a la entrada del diario</string>
+    <!-- edit view -->
+    <string name="error_name_already_used">La actividad con el nombre %1$s ya existe</string>
+    <string name="tooltip_quickfix_btn_edit_existing">Rechazar edición actual y abrir actividad existente con el mismo nombre en su lugar</string>
+    <string name="error_name_already_used_in_deleted">Ya existe una actividad eliminada con el nombre %1$s</string>
+    <string name="tooltip_quickfix_btn_rename_deleted">Cambiar el nombre de la actividad eliminada con el mismo nombre para resolver el conflicto</string>
+    <string name="tooltip_quickfix_btn_undelete_existing">Recuperar actividad con el mismo nombre</string>
+    <string name="error_name_similar">Nuevo nombre de actividad similar a %1$s</string>
+    <string name="recover_activity_toast">Actividad recuperada %1$s. Ahora es seleccionable de nuevo.</string>
+    <string name="renamed_deleted_activity_toast">Renombrado la actividad ya eliminada %1$s.</string>
+    <string name="edit_existing_activity_toast">Ahora editando la actividad existente con el nombre %1$s.</string>
+    <!-- history -->
+    <string name="default_datetime_format">yyyy.MM.dd HH: mm</string>
+    <string name="date_format">yyyy.MM.dd</string>
+    <string name="time_format">HH: mm</string>
+    <string name="history_start">Inicio: %1$s</string>
+    <string name="history_end">Fin: %1$s (%2$s)</string>
+    <string name="desc_start_date">Fecha de inicio</string>
+    <string name="desc_start_time">Hora de inicio</string>
+    <string name="desc_end_date">Fecha final</string>
+    <string name="desc_end_time">Hora de finalización</string>
+    <string name="history_detail_start">Inicio</string>
+    <string name="history_detail_end">Finalizar</string>
+    <string name="adjust_adjacent_times">Ajustar las entradas del diario adyacente</string>
+    <string name="constraint_positive_duration">La actividad siempre comenzará antes de que termine.</string>
+    <string name="search_notes">Buscar \'%1$s\' en notas&#x2026;</string>
+    <string name="search_diary">Buscar \'%1$s\' en notas&#x2026;</string>
+    <string name="search_date">Buscar \'%1$s\' en fechas&#x2026;</string>
+    <string name="wrongFormat">Por favor introduzca el valor en un formato correcto!</string>
+    <!-- Map -->
+    <string name="no_map_data_message">No hay datos para mostrar. Habilitar servicios de ubicación en la configuración.</string>
+    <!-- statistics -->
+    <string name="earlier">Más temprano</string>
+    <string name="later">Más tarde</string>
+    <string name="day_format">E, M.dd.yy</string>
+    <string name="week_format">yyyyy \'Semana\' ww</string>
+    <string name="month_format">MMMM yyyy</string>
+    <string name="year_format">yyyy</string>
+    <!-- relative dates -->
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="lastWeek">La semana pasada</string>
+    <!-- ACRA crash reporting -->
+    <string name="crash_dialog_text">Se produjo un error inesperado forzando a la aplicación a detenerse. Ayúdenos a solucionar esto enviándonos datos de error, todo lo que tiene que hacer es hacer clic en Aceptar.</string>
+    <string name="crash_dialog_comment_prompt">Puede agregar sus comentarios sobre el problema a continuación:</string>
+    <string name="crash_dialog_ok_toast">Gracias. Por favor, envíe el correo electrónico preparado después de revisar su contenido.</string>
+    <!-- Privacy Policy -->
+    <string name="privacy_text">ActivityDiary es una aplicación Libre y de Código Abierto para llevar registros diarios de actividades. Esta política de privacidad se aplica a esta aplicación de Android y describe qué datos se almacenan y procesan por el ActivityDiary.</string>
+    <string name="privacy_last_update">Ultima actualización: 22 de diciembre de 2018</string>
+    <string name="privacy_intro_title">Introducción</string>
+    <string name="privacy_intro_text1">Los Desarrolladores de ActivityDiary, nosotros (o “nosotros” o “nuestro”) respetamos la privacidad de nuestros usuarios (“usuario” o “usted”). Como el objetivo de esta aplicación es mantener un registro de sus actividades, una gran cantidad de información personal sensible se recopila y almacena. Sin embargo, son sus datos y usted tiene pleno control sobre ellos. Esta Política de Privacidad explica como la aplicación (la ¨Aplicación) colecta, usa, divulga y protege su información. Nuestros nombres pueden ser extraídos de los meta datos en los repositorios de git y dentro de la Aplicación.</string>
+    <string name="privacy_intro_text2">Por favor lea atentamente esta Política de Privacidad. Si no está de acuerdo con los términos de esta Política de Privacidad, por favor no acceda a la Aplicación y eliminela de su dispositivo.</string>
+    <string name="privacy_intro_text3">Nos reservamos el derecho de realizar cambios en esta Política de Privacidad en cualquier momento y por cualquier razón. Le avisaremos sobre cualquier cambio actualizando la fecha de “Última actualización” de esta Política de Privacidad.</string>
+    <string name="privacy_intro_text4">Se le recomienda revisar periódicamente esta Política de Privacidad para mantenerse informado de las actualizaciones. Se considerará que usted ha sido informado, estará sujeto a y se considerará que ha aceptado los cambios en cualquier Política de Privacidad revisada por el uso continuado de la Aplicación después de la fecha en que se publique dicha Política de Privacidad revisada.</string>
+    <string name="privacy_intro_text5">Esta política de privacidad no se aplica a terceros en línea/tienda móvil desde la que instala las aplicaciones o realiza pagos, que también pueden recopilar y utilizar datos sobre usted. No nos hacemos responsables de ninguno de los datos recogidos por ningún tercero de este tipo.</string>
+    <string name="privacy_what_title">¿Qué datos se procesan y almacenan?</string>
+    <string name="privacy_what_subTitle1">Actividad de datos</string>
+    <string name="privacy_what_subText1a">Los datos que ingresas para registrar tus actividades, incluyendo la fecha y la hora de inicio y fin de la actividad, combinado con el formato, las notas, las imágenes y las relaciones entre las diferentes actividades que se adjuntan a esas actividades se almacenan. Eliminar entradas como actividades o imágenes no las elimina por completo de la base de datos, pero sólo las oculta de forma automática.</string>
+    <string name="privacy_what_subTitle2">Información de Geo-Ubicación (ACCESS_FINE_LOCATION, GPS)</string>
+    <string name="privacy_what_subText2a">Si se configura, la aplicación accede a la información basada en la ubicación desde su dispositivo móvil para relacionar acitividades con la ubicación y proporcionar sugerencias de actividad basadas en la información de ubicación. Si desea cambiar el acceso a ActivityDiarys o los permisos, puede hacerlo en la configuración de su dispositivo o desactivar el uso de los servicios de ubicación en la configuración de las aplicaciones. Tenga en cuenta que esto no influye o elimina los datos de ubicación ya recolectados.</string>
+    <string name="privacy_what_subTitle3">Almacenamiento del dispositivo (WRITE_EXTERNAL_STORAGE)</string>
+    <string name="privacy_what_subText3a">Almacenamiento y recuperación de copias de seguridad, fotos y otros archivos que se adjunten a su diario de actividad necesitan acceso a la tarjeta SD \"almacenamiento externo\" / tarjeta SD de Android.</string>
+    <string name="privacy_what_subTitle4">Cámara</string>
+    <string name="privacy_what_subText4a">La aplicación te permite tomar fotos con la cámara de tus dispositivos y adjuntarlas a tu agenda de actividades. Este es el único uso del permiso de la cámara.</string>
+    <string name="privacy_what_subTitle5">Estado de red (ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)</string>
+    <string name="privacy_what_subText5a">La red y el estado WIFI se almacenan para correlacionar las actividades con esos datos y proponer y establecer las siguientes actividades basadas en el estado actual.</string>
+    <string name="privacy_what_subTitle6">Informes de fallas</string>
+    <string name="privacy_what_subText6a">En caso de fallo del programa la aplicación prepara un informe que nos ayude a mejorar el comportamiento de la aplicación. Este informe contiene muchos datos técnicos sobre su dispositivo y sistema operativo, las preferencias completas de la aplicación y el seguimiento de los pasos del programa efectuados justo antes del cierre. El hardware de su dispositivo, incluyendo pero no limitado al tamaño y resolución de la pantalla, el fabricante, la configuración de idioma y las versiones del sistema operativo y la aplicación son identificables. El informe preparado no se transmite automáticamente, pero compartido con su aplicación de correo electrónico en un nuevo correo electrónico que usted - a su propia voluntad - puede enviarnos o a quien quiera. La protección de los datos durante la transmisión mediante la transferencia de correo electrónico cifrada es responsabilidad de usted y de su proveedor de servicios de correo. Le recomendamos encarecidamente revisar a fondo el informe y eliminar todos los datos que no entiende y/o no desea compartir.</string>
+    <string name="privacy_what_subText6b">Como el medio utilizado es el correo electrónico, usted revelará su nombre, dirección de correo electrónico, y otros datos técnicos como la dirección IP y el proveedor de servicios de correo electrónico transmitiendo un informe de error. No usaremos esta información para nada más que contactar con usted sobre el accidente.</string>
+    <string name="privacy_what_subText6c">Los extractos anónimos del informe que no permiten su indentificación podrían ser usados en el gestor de incidencias público para documentar el fallo y rastrear el rediseño.</string>
+    <string name="privacy_what_subText6d">Additional to this report prepared by the application your operating system or services on you device might transmit crash or usage reports, but those are not part of ActivityDiary, not covered by this privacy policy and under your own responsibility.</string>
+    <string name="privacy_why_title">Why does the application store data?</string>
+    <string name="privacy_why_text1">The Applications is designed to create a record of your activites. This is achieved by selecting the current activities manually or automatically, based on evaluation of data entered by you or collected by your device. The data you enter into the application is stored for later retreival by the user. The application stores and evaluates data of different sensors of your device to suggest or even automatically select the next activities. No data is collected, transmitted or stored that is not required for its intended functionality.</string>
+    <string name="privacy_why_text2">When you use the Application, your personal information is stored and evaluated locally on your device and not transmitted to any organization or company without your explicity request.</string>
+    <string name="privacy_why_text3">The stored data can be deleted by removing the application and deleting the backups created by you and backup mechanisms of your device.</string>
+    <string name="privacy_how_title">How is the data protected?</string>
+    <string name="privacy_how_text1">The Application store unencrypted data locally on the device it is executed on. You are responsible to protect the stored data from unauthorized access. We highly recommend to protect your device with a strong password and even encrypt your devices\' storage. Backups created by the application itself or any device backup mechanism also need to be protected by you in a similar fashion.</string>
+    <string name="privacy_security_title">Seguridad de su información</string>
+    <string name="privacy_security_text">We use the mechanisms provided by the Android framework to protect your personal information from other applications on your device. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data protection can be guaranteed against any interception or other type of misuse. Therefore, we cannot guarantee complete security of you provide personal information.</string>
+    <string name="privacy_rights_title">Your rights</string>
+    <string name="privacy_rights_text">At any time and free of cost you have the right to ask us about which data we store about you. You can always request for correction or removal of personal data or restrict the use of your data.</string>
+    <string name="privacy_contact_title">Contact us</string>
+    <string name="privacy_contact_text">If you have questions or comments about this Privacy Policy, please contact us at:</string>
+</resources>
