@@ -15,6 +15,6 @@ TBD
 ## 环境配置
 
 统一一下环境配置，避免出现环境不一致的问题
-java 21.0.1
+java 1.8
 gradle 7.3.0（注意不要更新gradle版本，否则会出现问题）
-使用Android Studio进行开发，AVD使用Pixel XL API 33
+AVD使用API 32
