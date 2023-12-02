@@ -1,3 +1,0 @@
-- Update verschiedener Abhängigkeiten
-- Korrektur der Kartenansicht
-- Kleinere Fehlerbehebungen
