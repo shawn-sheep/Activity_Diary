@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ActivityDiary.iml" filepath="$PROJECT_DIR$/.idea/modules/ActivityDiary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ActivityDiary.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Activity_Diary.iml" filepath="$PROJECT_DIR$/.idea/modules/Activity_Diary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Activity_Diary.app.unitTest.iml" />
     </modules>
   </component>
 </project>
