@@ -15,10 +15,19 @@ TBD
 ## 环境配置
 
 统一一下环境配置，避免出现环境不一致的问题
+
+为了保证和原本项目的兼容，所有环境配置都采取和原项目一模一样
+
 AVD使用API 32，Android 12.0
+
 jdk 1.8
+
 java 8
+
 ![Java](images/Java.png)
+
 Android Gradle Plugin Version 7.3.0
+
 Gradle Version 7.4（注意不要更新gradle版本，否则会出现问题）
+
 ![Gradle](images/Gradle.png)
