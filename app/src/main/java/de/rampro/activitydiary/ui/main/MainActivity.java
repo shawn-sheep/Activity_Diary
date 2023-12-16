@@ -167,14 +167,11 @@ public class MainActivity extends BaseActivity implements
         }
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         View contentView = inflater.inflate(R.layout.activity_main_content, null, false);
-
         setContent(contentView);
 
         headerView = findViewById(R.id.header_area);
         tabLayout = findViewById(R.id.tablayout);
-
         viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
@@ -184,7 +181,7 @@ public class MainActivity extends BaseActivity implements
         View selector = findViewById(R.id.activity_background);
         selector.setOnLongClickListener(this);
         selector.setOnClickListener(v -> {
-            // TODO: get rid of this setting?
+
             if(PreferenceManager
                     .getDefaultSharedPreferences(ActivityDiaryApplication.getAppContext())
                     .getBoolean(SettingsActivity.KEY_PREF_DISABLE_CURRENT, true)){
@@ -201,15 +198,21 @@ public class MainActivity extends BaseActivity implements
 
         android.util.DisplayMetrics metrics = new android.util.DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        normalRowCount = (int)Math.floor((metrics.heightPixels / value.getDimension(metrics) - 2) / 2);
+        normalRowCount = (int)Math.floor((metrics.heightPixels / value.getDimension(metrics) - 2) / 5);
         searchRowCount = normalRowCount - 2;
         if(searchRowCount <= 0) searchRowCount = 1;
 
-        selectorLayoutManager = new StaggeredGridLayoutManager(normalRowCount, StaggeredGridLayoutManager.HORIZONTAL);
+        selectorLayoutManager = new StaggeredGridLayoutManager(normalRowCount, StaggeredGridLayoutManager.VERTICAL);
         selectRecyclerView.setLayoutManager(selectorLayoutManager);
         getSupportActionBar().setSubtitle(getResources().getString(R.string.activity_subtitle_main));
 
         likelyhoodSort();
+
+
+
+
+
+
 
         fabNoteEdit = (FloatingActionButton) findViewById(R.id.fab_edit_note);
         fabAttachPicture = (FloatingActionButton) findViewById(R.id.fab_attach_picture);
@@ -274,7 +277,6 @@ public class MainActivity extends BaseActivity implements
             String query = intent.getStringExtra(SearchManager.QUERY);
             filterActivityView(query);
         }
-// TODO: this is crazy to call onActivityChagned here, as it reloads the statistics and refills the viewModel... Completely against the idea of the viewmodel :-(
         onActivityChanged(); /* do this at the very end to ensure that no Loader finishes its data loading before */
     }
 
@@ -412,7 +414,7 @@ public class MainActivity extends BaseActivity implements
                             ActivityDiaryContract.DiaryActivity.X_START_OF_LAST
                     },
                     ActivityDiaryContract.DiaryActivity._DELETED + " = 0 AND "
-                    + ActivityDiaryContract.DiaryActivity._ID + " = ?",
+                            + ActivityDiaryContract.DiaryActivity._ID + " = ?",
                     new String[] {
                             Integer.toString(newAct.getId())
                     },

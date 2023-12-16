@@ -30,7 +30,7 @@
         <item>Horas + min</item>
     </string-array>
     <string-array name="statistic_dropdown" translatable="true">
-        <item>Todo</item>
+        <!--        <item>Todo</item>-->
         <item>Últimos 7 días</item>
         <item>Últimos 30 días</item>
         <item>Día</item>

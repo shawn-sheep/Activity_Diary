@@ -19,11 +19,14 @@
 
 package de.rampro.activitydiary.ui.generic;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import de.rampro.activitydiary.R;

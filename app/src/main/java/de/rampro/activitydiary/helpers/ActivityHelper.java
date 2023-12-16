@@ -325,8 +325,8 @@ public class ActivityHelper extends AsyncQueryHandler{
     public void readCurrentActivity() {
         startQuery(QUERY_CURRENT_ACTIVITY, null, ActivityDiaryContract.Diary.CONTENT_URI,
                 DIARY_PROJ, ActivityDiaryContract.Diary.START + " = (SELECT MAX("
-                + ActivityDiaryContract.Diary.START + ") FROM "
-                + ActivityDiaryContract.Diary.TABLE_NAME + " WHERE " + SELECTION +")"
+                        + ActivityDiaryContract.Diary.START + ") FROM "
+                        + ActivityDiaryContract.Diary.TABLE_NAME + " WHERE " + SELECTION +")"
                 , null,
                 ActivityDiaryContract.Diary.START + " DESC");
     }
@@ -364,7 +364,7 @@ public class ActivityHelper extends AsyncQueryHandler{
                     mCurrentActivityStartTime.setTime(cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.Diary.START)));
                     mCurrentNote = cursor.getString(cursor.getColumnIndex(ActivityDiaryContract.Diary.NOTE));
                     mCurrentDiaryUri = Uri.withAppendedPath(ActivityDiaryContract.Diary.CONTENT_URI,
-                                        Long.toString(cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.Diary._ID))));
+                            Long.toString(cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.Diary._ID))));
 
                 }
                 showCurrentActivityNotification();
@@ -454,7 +454,7 @@ public class ActivityHelper extends AsyncQueryHandler{
             notificationManager = NotificationManagerCompat.from(ActivityDiaryApplication.getAppContext());
 
             Intent intent = new Intent(ActivityDiaryApplication.getAppContext(), MainActivity.class);
-            PendingIntent pIntent = PendingIntent.getActivity(ActivityDiaryApplication.getAppContext(), (int) System.currentTimeMillis(), intent, 0);
+            PendingIntent pIntent = PendingIntent.getActivity(ActivityDiaryApplication.getAppContext(), (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.setContentIntent(pIntent);
             updateNotification();
         }else{
@@ -476,8 +476,8 @@ public class ActivityHelper extends AsyncQueryHandler{
             int idx = 0;
             for(NotificationCompat.Action a: notificationBuilder.mActions){
                 if(notificationBuilder.mActions.size() - idx - 1 < activities.size()
-                    &&
-                   activities.get(notificationBuilder.mActions.size() - idx - 1).getId() != a.getExtras().getInt("SELECT_ACTIVITY_WITH_ID")) {
+                        &&
+                        activities.get(notificationBuilder.mActions.size() - idx - 1).getId() != a.getExtras().getInt("SELECT_ACTIVITY_WITH_ID")) {
                     needUpdate = true;
                 }
                 idx++;
@@ -493,7 +493,7 @@ public class ActivityHelper extends AsyncQueryHandler{
 
                         Intent intent = new Intent(ActivityDiaryApplication.getAppContext(), MainActivity.class);
                         intent.putExtra("SELECT_ACTIVITY_WITH_ID", act.getId());
-                        PendingIntent pIntent = PendingIntent.getActivity(ActivityDiaryApplication.getAppContext(), (int) System.currentTimeMillis(), intent, 0);
+                        PendingIntent pIntent = PendingIntent.getActivity(ActivityDiaryApplication.getAppContext(), (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_IMMUTABLE);
                         NotificationCompat.Action a = new NotificationCompat.Action(R.drawable.ic_nav_select, coloredActivity, pIntent);
                         a.getExtras().putInt("SELECT_ACTIVITY_WITH_ID", act.getId());
                         notificationBuilder.addAction(a);
