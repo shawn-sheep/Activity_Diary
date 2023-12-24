@@ -182,7 +182,7 @@ public class EditActivity extends BaseActivity implements ActivityHelper.DataCha
                                             ActivityDiaryContract.DiaryActivity.NAME + " = ?",
                                             new String[]{newName},
                                             null
-                                            );
+                                    );
                                     setCheckState(CHECK_STATE_OK);
                                 }
                             });
@@ -316,6 +316,7 @@ public class EditActivity extends BaseActivity implements ActivityHelper.DataCha
         View contentView = inflater.inflate(R.layout.activity_edit_content, null, false);
 
         setContent(contentView);
+
         mActivityName = (EditText) contentView.findViewById(R.id.edit_activity_name);
         mActivityName.addTextChangedListener(new TextWatcher(){
             @Override

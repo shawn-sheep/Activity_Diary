@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ ActivityDiary
-  ~
-  ~ Copyright (C) 2018 Raphael Mack http://www.raphael-mack.de
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <TextView
-        android:id="@+id/noMap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/no_map_data_message"
-        android:textAlignment="center"
-        android:visibility="gone"/>
-
-    <org.osmdroid.views.MapView android:id="@+id/map"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="visible"        >
+        android:layout_height="fill_parent">
 
-    </org.osmdroid.views.MapView>
+        <TextView
+            android:id="@+id/noMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/no_map_data_message"
+            android:textAlignment="center"
+            android:visibility="gone"/>
 
-</LinearLayout>
+        <org.osmdroid.views.MapView android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="visible"        >
+
+        </org.osmdroid.views.MapView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <ImageView
+            android:id="@+id/floatingImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/microphone_icon"
+            android:clickable="true"
+            android:padding="8dp" />
+
+    </FrameLayout>
+</RelativeLayout>

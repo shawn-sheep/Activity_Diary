@@ -47,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
     protected ActionBarDrawerToggle mDrawerToggle;
     protected NavigationView mNavigationView;
 
-@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -118,6 +118,12 @@ public class BaseActivity extends AppCompatActivity {
                         Intent intentsettings = new Intent(BaseActivity.this, SettingsActivity.class);
                         startActivity(intentsettings);
                         break;
+
+                    case R.id.nav_achievement:
+                        Intent intentachieve = new Intent(BaseActivity.this, AchievementActivity.class);
+                        startActivity(intentachieve);
+                        break;
+
                     default:
                         Toast.makeText(BaseActivity.this, menuItem.getTitle() + " is not yet implemented :-(", Toast.LENGTH_LONG).show();
                         break;

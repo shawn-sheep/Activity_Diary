@@ -26,6 +26,8 @@
         android:id="@+id/noteText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient1"
+
         android:ems="10"
         android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
         android:lines="4"

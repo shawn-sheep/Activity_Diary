@@ -29,7 +29,9 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.CursorLoader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -78,25 +80,38 @@ public class ManageActivity extends BaseActivity implements LoaderManager.Loader
     private class DiaryActivityAdapter extends ResourceCursorAdapter {
 
         public DiaryActivityAdapter() {
-            super(ManageActivity.this, R.layout.activity_row, null, 0);
+            super(ManageActivity.this, R.layout.item_list, null, 0);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor){
             String name = cursor.getString(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.NAME));
-            int color = cursor.getInt(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.COLOR));
+            int startColor = cursor.getInt(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.COLOR));
 
             TextView actName = (TextView) view.findViewById(R.id.activity_name);
             actName.setText(name);
-            if(cursor.getInt(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity._DELETED)) == 0) {
-                actName.setPaintFlags(actName.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            }else{
-                actName.setPaintFlags(actName.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-            RelativeLayout bgrd = (RelativeLayout) view.findViewById(R.id.activity_background);
-            bgrd.setBackgroundColor(color);
+//            if(cursor.getInt(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity._DELETED)) == 0) {
+//                actName.setPaintFlags(actName.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+//            }else{
+//                actName.setPaintFlags(actName.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+//            }
 
-            actName.setTextColor(GraphicsHelper.textColorOnBackground(color));
+            // Default end color if not present in the database
+            int defaultEndColor = Color.parseColor("#f3f2d4");
+
+            GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{startColor, defaultEndColor});
+            gradientDrawable.setCornerRadius(0f); // You can adjust the corner radius as needed
+
+            RelativeLayout bgrd = view.findViewById(R.id.activity_background);
+            bgrd.setBackground(gradientDrawable);
+
+            actName.setTextColor(GraphicsHelper.textColorOnBackground(defaultEndColor));
+//
+
+//            RelativeLayout bgrd = (RelativeLayout) view.findViewById(R.id.activity_background);
+//            bgrd.setBackgroundColor(color);
+//
+//            actName.setTextColor(GraphicsHelper.textColorOnBackground(color));
         }
     }
 
@@ -119,8 +134,8 @@ public class ManageActivity extends BaseActivity implements LoaderManager.Loader
 
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
-    /* TODO: refactor to use the ActivityHelper instead of directly a Loader; 2017-12-02, RMk: not sure whether we should do this... */
-    /* TODO: add a clear way to ensure loader ID uniqueness */
+        /* TODO: refactor to use the ActivityHelper instead of directly a Loader; 2017-12-02, RMk: not sure whether we should do this... */
+        /* TODO: add a clear way to ensure loader ID uniqueness */
         getLoaderManager().initLoader(-2, null, this);
         mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
