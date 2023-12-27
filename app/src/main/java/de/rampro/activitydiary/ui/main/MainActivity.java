@@ -89,6 +89,11 @@ import de.rampro.activitydiary.ui.generic.BaseActivity;
 import de.rampro.activitydiary.ui.generic.EditActivity;
 import de.rampro.activitydiary.ui.history.HistoryDetailActivity;
 import de.rampro.activitydiary.ui.settings.SettingsActivity;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /*
  * MainActivity to show most of the UI, based on switching the fragements
@@ -127,6 +132,19 @@ public class MainActivity extends BaseActivity implements
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private View headerView;
+    private SpeechRecognizer mIat;// 语音听写对象
+    private RecognizerDialog mIatDialog;// 语音听写UI
+
+    // 用HashMap存储听写结果
+    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+
+    private SharedPreferences mSharedPreferences;//缓存
+
+    private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
+    private String language = "zh_cn";//识别语言
+
+    private TextView tvResult;//识别结果
+    private String resultType = "json";//结果内容数据格式
 
     private void setSearchMode(boolean searchMode){
         if(searchMode){
@@ -210,12 +228,6 @@ public class MainActivity extends BaseActivity implements
 
         likelyhoodSort();
 
-
-
-
-
-
-
         fabNoteEdit = (FloatingActionButton) findViewById(R.id.fab_edit_note);
         fabAttachPicture = (FloatingActionButton) findViewById(R.id.fab_attach_picture);
         fabVocalHelper = (FloatingActionButton) findViewById(R.id.vocal_helper);
@@ -260,6 +272,15 @@ public class MainActivity extends BaseActivity implements
                     }
 
                 }
+            }else{
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.no_active_activity_error), Toast.LENGTH_LONG).show();
+            }
+        });
+        fabVocalHelper.setOnClickListener(v->{
+            if(viewModel.currentActivity().getValue() != null) {
+                NoteEditDialog dialog = new NoteEditDialog();
+                dialog.setText(viewModel.mNote.getValue());
+                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
             }else{
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.no_active_activity_error), Toast.LENGTH_LONG).show();
             }
