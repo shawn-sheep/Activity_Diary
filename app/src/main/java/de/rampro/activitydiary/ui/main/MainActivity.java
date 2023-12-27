@@ -120,6 +120,8 @@ public class MainActivity extends BaseActivity implements
     private int searchRowCount, normalRowCount;
     private FloatingActionButton fabNoteEdit;
     private FloatingActionButton fabAttachPicture;
+
+    private FloatingActionButton fabVocalHelper;
     private SearchView searchView;
     private MenuItem searchMenuItem;
     private ViewPager viewPager;
@@ -216,6 +218,7 @@ public class MainActivity extends BaseActivity implements
 
         fabNoteEdit = (FloatingActionButton) findViewById(R.id.fab_edit_note);
         fabAttachPicture = (FloatingActionButton) findViewById(R.id.fab_attach_picture);
+        fabVocalHelper = (FloatingActionButton) findViewById(R.id.vocal_helper);
 
         fabNoteEdit.setOnClickListener(v -> {
             // Handle the click on the FAB

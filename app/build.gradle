@@ -111,6 +111,11 @@ android {
     dataBinding {
         enabled = true
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     namespace 'de.rampro.activitydiary'
 }
 
@@ -129,6 +134,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation files('libs\\Msc.jar')
 
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.5.1'
 

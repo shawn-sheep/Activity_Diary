@@ -193,6 +193,21 @@
         app:layout_anchorGravity="bottom|right|end"
         android:visibility="visible"
         />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/vocal_helper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="90dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_vocal_helper"
+        app:fabSize="normal"
+        app:layout_anchor="@id/select_recycler"
+        app:layout_anchorGravity="bottom|right|end"
+        android:visibility="visible"
+        />
 
     <!-- TODO: add options on current activity:
                - create sub-activity (maybe slide left)
@@ -200,19 +215,19 @@
                - add note (FAB?)
                - go back to previous activity (in list of possible next acts)
                -->
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start">
+<!--    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|start">-->
 
-        <ImageView
-            android:id="@+id/floatingImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/microphone_icon"
-            android:clickable="true"
-            android:padding="8dp" />
+<!--        <ImageView-->
+<!--            android:id="@+id/floatingImageView"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:src="@drawable/microphone_icon"-->
+<!--            android:clickable="true"-->
+<!--            android:padding="8dp" />-->
 
-    </FrameLayout>
+<!--    </FrameLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -30,12 +30,15 @@ import org.acra.config.*;
 import org.acra.data.StringFormat;
 
 import de.rampro.activitydiary.helpers.GraphicsHelper;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.SpeechConstant;
 
 public class ActivityDiaryApplication extends Application {
 
     private static Context context;
 
     public void onCreate() {
+        SpeechUtility.createUtility(ActivityDiaryApplication.this, SpeechConstant.APPID +"=e3db48a0");
         super.onCreate();
         ActivityDiaryApplication.context = getApplicationContext();
 
