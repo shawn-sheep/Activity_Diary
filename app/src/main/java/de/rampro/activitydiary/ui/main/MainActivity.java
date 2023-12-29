@@ -18,7 +18,10 @@
  */
 package de.rampro.activitydiary.ui.main;
 
+import static android.os.Environment.getExternalStorageDirectory;
+
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -89,9 +92,19 @@ import de.rampro.activitydiary.ui.generic.BaseActivity;
 import de.rampro.activitydiary.ui.generic.EditActivity;
 import de.rampro.activitydiary.ui.history.HistoryDetailActivity;
 import de.rampro.activitydiary.ui.settings.SettingsActivity;
+
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -143,7 +156,7 @@ public class MainActivity extends BaseActivity implements
     private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
     private String language = "zh_cn";//识别语言
 
-    private TextView tvResult;//识别结果
+//    private TextView tvResult = findViewById(R.id.tv_);//识别结果
     private String resultType = "json";//结果内容数据格式
 
     private void setSearchMode(boolean searchMode){
@@ -174,7 +187,60 @@ public class MainActivity extends BaseActivity implements
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+//            ?
+            if (code != ErrorCode.SUCCESS){
+//               ?
+                showMsg("nmlgbd,wsm");
+            }
+        }
+    };
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
 
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mIatResults.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : mIatResults.keySet()) {
+            resultBuffer.append(mIatResults.get(key));
+        }
+
+//        tvResult.setText(resultBuffer.toString());//听写结果显示
+//        showMsg(resultBuffer.toString());
+    }
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results,boolean isLast) {
+            printResult(results);
+        }
+        public void onError(SpeechError error){
+            showMsg(error.getPlainDescription(true));
+        }
+    };
+    private void showMsg(String msg){
+        Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+    }
+    public void setParam() {
+        mIat.setParameter(SpeechConstant.PARAMS, null);
+        mIat.setParameter(SpeechConstant.ENGINE_TYPE, mEngineType);
+        mIat.setParameter(SpeechConstant.RESULT_TYPE, resultType);
+        mIat.setParameter(SpeechConstant.LANGUAGE,"en_us");
+        mIat.setParameter(SpeechConstant.VAD_BOS, mSharedPreferences.getString("iat_vadbos_preference", "4000"));
+        mIat.setParameter(SpeechConstant.VAD_EOS, mSharedPreferences.getString("iat_vadeos_preference", "1000"));
+        mIat.setParameter(SpeechConstant.ASR_PTT, mSharedPreferences.getString("iat_punc_preference", "1"));
+        mIat.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, getExternalFilesDir("msc").getAbsolutePath() + "/iat.wav");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,6 +251,11 @@ public class MainActivity extends BaseActivity implements
         if (savedInstanceState != null) {
             mCurrentPhotoPath = savedInstanceState.getString("currentPhotoPath");
         }
+
+        // 语音识别相关初始化
+        mIat = SpeechRecognizer.createRecognizer(MainActivity.this, mInitListener);
+        mIatDialog = new RecognizerDialog(MainActivity.this,mInitListener);
+        mSharedPreferences = getSharedPreferences("ASR", Activity.MODE_PRIVATE);
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.activity_main_content, null, false);
@@ -276,14 +347,17 @@ public class MainActivity extends BaseActivity implements
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.no_active_activity_error), Toast.LENGTH_LONG).show();
             }
         });
+
+
         fabVocalHelper.setOnClickListener(v->{
-            if(viewModel.currentActivity().getValue() != null) {
-                NoteEditDialog dialog = new NoteEditDialog();
-                dialog.setText(viewModel.mNote.getValue());
-                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
-            }else{
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.no_active_activity_error), Toast.LENGTH_LONG).show();
+            if( null == mIat){
+                showMsg("wrong");
+                return;
             }
+            mIatResults.clear();
+            setParam();
+            mIatDialog.setListener(mRecognizerDialogListener);
+            mIatDialog.show();
         });
 
         fabNoteEdit.show();
