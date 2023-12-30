@@ -91,7 +91,7 @@ import de.rampro.activitydiary.ui.history.HistoryDetailActivity;
 import de.rampro.activitydiary.ui.settings.SettingsActivity;
 
 /*
- * MainActivity to show most of the UI, based on switching the fragements
+ * MainActivity to show most of the UI, based on switching the fragments
  *
  * */
 public class MainActivity extends BaseActivity implements
