@@ -84,7 +84,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 " ('Sleeping', '" + Color.parseColor("#303f9f") + "');");
     }
 
-    public static final int CURRENT_VERSION = 6;
+    public static final int CURRENT_VERSION = 5;
 /*
     For debugging sometimes it is handy to drop a table again. This can easily be achieved in onDowngrade,
     after CURRENT_VERSION is decremented again
@@ -129,12 +129,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
             createRecentSuggestionsTable(db);
         }
 
-        if (oldVersion < 6) { // 假设当前版本是 6
-            // 创建成就表
-            createAchievementsTable(db);
-        }
-
-        if (newVersion > 6) {
+        if (newVersion > 5) {
             throw new RuntimeException("Database upgrade to version " + newVersion + " nyi.");
         }
     }
@@ -179,17 +174,6 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 ");");
     }
 
-    //添加了新的成就表
-    private void createAchievementsTable(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE achievements (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name TEXT NOT NULL," +
-                "description TEXT NOT NULL," +
-                "iconPath TEXT NOT NULL," +
-                "unlocked INTEGER NOT NULL DEFAULT 0," +
-                "unlockDate INTEGER DEFAULT NULL" +
-                ");");
-    }
     private void createTablesForVersion(SQLiteDatabase db, int version) {
         db.execSQL("CREATE TABLE " +
                 "activity " +
@@ -225,9 +209,5 @@ public class LocalDBHelper extends SQLiteOpenHelper {
             createRecentSuggestionsTable(db);
         }
 
-        //创建成就表
-        if (version >= 6) {
-            createAchievementsTable(db);
-        }
     }
 }
