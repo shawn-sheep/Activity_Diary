@@ -20,10 +20,18 @@
 
 package de.rampro.activitydiary.db;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.provider.BaseColumns;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.rampro.activitydiary.model.Achievement;
 
 
 public class LocalDBHelper extends SQLiteOpenHelper {
@@ -132,6 +140,11 @@ public class LocalDBHelper extends SQLiteOpenHelper {
         if (newVersion > 5) {
             throw new RuntimeException("Database upgrade to version " + newVersion + " nyi.");
         }
+
+        if (oldVersion < CURRENT_VERSION) {
+            db.execSQL(SQL_CREATE_ACHIEVEMENTS_TABLE);
+        }
+
     }
 
     private void createDiaryLocationTable(SQLiteDatabase db) {
@@ -197,6 +210,8 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY(act_id) REFERENCES activity(_id) " +
                 ");");
 
+        db.execSQL(SQL_CREATE_ACHIEVEMENTS_TABLE);
+
         if (version >= 3) {
             createDiaryImageTable(db);
         }
@@ -210,4 +225,63 @@ public class LocalDBHelper extends SQLiteOpenHelper {
         }
 
     }
+    private static final String SQL_CREATE_ACHIEVEMENTS_TABLE =
+            "CREATE TABLE " + AchievementEntry.TABLE_NAME + " (" +
+                    AchievementEntry._ID + " INTEGER PRIMARY KEY," +
+                    AchievementEntry.COLUMN_NAME_TITLE + " TEXT," +
+                    AchievementEntry.COLUMN_NAME_DESCRIPTION + " TEXT," +
+                    AchievementEntry.COLUMN_NAME_UNLOCKED + " INTEGER," +
+                    AchievementEntry.COLUMN_NAME_UNLOCK_TIME + " INTEGER)";
+
+    public static class AchievementEntry implements BaseColumns {
+        public static final String TABLE_NAME = "achievement";
+        public static final String COLUMN_NAME_TITLE = "title";
+        public static final String COLUMN_NAME_DESCRIPTION = "description";
+        public static final String COLUMN_NAME_UNLOCKED = "unlocked";
+        public static final String COLUMN_NAME_UNLOCK_TIME = "unlock_time";
+    }
+    public long addAchievement(Achievement achievement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(AchievementEntry.COLUMN_NAME_TITLE, achievement.getName());
+        values.put(AchievementEntry.COLUMN_NAME_DESCRIPTION, achievement.getDescription());
+        values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, achievement.isUnlocked() ? 1 : 0);
+        values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, achievement.getUnlockTime());
+
+        long newRowId = db.insert(AchievementEntry.TABLE_NAME, null, values);
+        return newRowId;
+    }
+
+    public List<Achievement> getAllAchievements() {
+        List<Achievement> achievements = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                AchievementEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        while(cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(AchievementEntry._ID));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(AchievementEntry.COLUMN_NAME_TITLE));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(AchievementEntry.COLUMN_NAME_DESCRIPTION));
+            boolean isUnlocked = cursor.getInt(cursor.getColumnIndexOrThrow(AchievementEntry.COLUMN_NAME_UNLOCKED)) == 1;
+            long unlockTime = cursor.getLong(cursor.getColumnIndexOrThrow(AchievementEntry.COLUMN_NAME_UNLOCK_TIME));
+
+            Achievement achievement = new Achievement(id, name, description);
+            achievement.setUnlocked(isUnlocked);
+            achievement.setUnlockTime(unlockTime);
+
+            achievements.add(achievement);
+        }
+        cursor.close();
+
+        return achievements;
+    }
+
 }
