@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,6 +108,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
 
 /*
  * MainActivity to show most of the UI, based on switching the fragements
@@ -190,13 +193,27 @@ public class MainActivity extends BaseActivity implements
     private InitListener mInitListener = new InitListener() {
         @Override
         public void onInit(int code) {
-//            ?
+
             if (code != ErrorCode.SUCCESS){
-//               ?
-                showMsg("nmlgbd,wsm");
+
+                showMsg("nmd,wsm");
             }
         }
     };
+    private String[] format(String[] params){
+        List<String> res = new ArrayList<>();
+        for(String param: params){
+            param = param.trim();
+            if(!param.isEmpty()) {
+                param = param.toLowerCase();
+                param = Character.toUpperCase(param.charAt(0)) + param.substring(1);
+                res.add(param);
+            }
+        }
+        return res.toArray(new String[0]);
+    }
+
+
     private void printResult(RecognizerResult results) {
         String text = JsonParser.parseIatResult(results.getResultString());
 
@@ -218,6 +235,78 @@ public class MainActivity extends BaseActivity implements
 
 //        tvResult.setText(resultBuffer.toString());//听写结果显示
 //        showMsg(resultBuffer.toString());
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+        String res = resultBuffer.toString();
+        String[] params = format(res.split(" "));
+        if(params[0].equals("Start")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (!tmp.moveToFirst())
+                showMsg("There's no such activity.");
+            else{
+                String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
+                int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
+                int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
+                DiaryActivity newAct = new DiaryActivity(activity_id,activity_name,activity_color);
+                if(!newAct.equals(ActivityHelper.helper.getCurrentActivity())) {
+
+                    ActivityHelper.helper.setCurrentActivity(newAct);
+
+                    searchView.setQuery("", false);
+                    searchView.setIconified(true);
+
+
+                    SpannableStringBuilder snackbarText = new SpannableStringBuilder();
+                    snackbarText.append(newAct.getName());
+                    int end = snackbarText.length();
+                    snackbarText.setSpan(new ForegroundColorSpan(newAct.getColor()), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    snackbarText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    snackbarText.setSpan(new RelativeSizeSpan((float) 1.4152), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                    Snackbar undoSnackBar = Snackbar.make(findViewById(R.id.main_layout),
+                            snackbarText, Snackbar.LENGTH_LONG);
+                    undoSnackBar.setAction(R.string.action_undo, new View.OnClickListener() {
+                        /**
+                         * Called when a view has been clicked.
+                         *
+                         * @param v The view that was clicked.
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            Log.v(TAG, "UNDO Activity Selection");
+                            ActivityHelper.helper.undoLastActivitySelection();
+                        }
+                    });
+                    undoSnackBar.show();
+                }else{
+                    /* clicked the currently active activity in the list, so let's terminate it due to #176 */
+//                ActivityHelper.helper.setCurrentActivity(null);
+                    showMsg("It's already running now.");
+                }
+            }
+        }else if(params[0].equals("Stop")){
+            if(params[1].equals("Current")){
+                if(ActivityHelper.helper.getCurrentActivity() != null)
+                    ActivityHelper.helper.setCurrentActivity(null);
+                else
+                    showMsg("No current running activity.");
+            }
+        }else if(params[0].equals("Add")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (tmp.moveToFirst())
+                showMsg("There's such an activity.");
+            else{
+
+            }
+        }
+
+
     }
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
@@ -462,6 +551,7 @@ public class MainActivity extends BaseActivity implements
     public void onItemClick(int adapterPosition) {
 
         DiaryActivity newAct = selectAdapter.item(adapterPosition);
+//        DiaryActivity tmp = ActivityHelper.helper.getCurrentActivity();
         if(newAct != ActivityHelper.helper.getCurrentActivity()) {
 
             ActivityHelper.helper.setCurrentActivity(newAct);
