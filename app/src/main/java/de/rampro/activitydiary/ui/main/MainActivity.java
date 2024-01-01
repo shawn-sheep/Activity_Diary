@@ -343,10 +343,14 @@ public class MainActivity extends BaseActivity implements
             }
         }
         else if(params[0].equals("Note")){
-            String content = recoverToSentence(params);
-            NoteEditDialog dialog = new NoteEditDialog();
-            dialog.setText(viewModel.mNote.getValue() + content);
-            dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                String content = recoverToSentence(params);
+                NoteEditDialog dialog = new NoteEditDialog();
+                dialog.setText(viewModel.mNote.getValue() + content);
+                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
+            } else
+                showMsg("No current running activity!");
+
         }
         else{
             showMsg("Undefined Option");
