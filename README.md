@@ -20,11 +20,16 @@ TBD
 
 AVD使用API 32，Android 12.0
 
-jdk 1.8
+---
+~~jdk 1.8~~
 
-java 8
+~~java 8~~
 
 ![Java](images/Java.png)
+
+Update：需要使用jdk 11，java 11进行编译
+
+---
 
 Android Gradle Plugin Version 7.3.0
 
