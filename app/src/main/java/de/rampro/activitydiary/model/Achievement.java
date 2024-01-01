@@ -35,6 +35,13 @@ public class Achievement {
         this.unlockTime = 0; // 初始时，解锁时间为0
     }
 
+    public Achievement(int id, String name, String description, boolean isUnlocked, long unlockTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.isUnlocked = isUnlocked;
+        this.unlockTime = unlockTime;
+    }
     // Getter 和 Setter 方法
     public int getId() {
         return id;

@@ -20,9 +20,12 @@
 package de.rampro.activitydiary.helpers;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +34,7 @@ import de.rampro.activitydiary.ActivityDiaryApplication;
 import de.rampro.activitydiary.R;
 import de.rampro.activitydiary.db.ActivityDiaryContentProvider;
 import de.rampro.activitydiary.db.ActivityDiaryContract;
+import de.rampro.activitydiary.db.LocalDBHelper;
 import de.rampro.activitydiary.model.DiaryActivity;
 import de.rampro.activitydiary.ui.main.MainActivity;
 
@@ -59,16 +63,9 @@ public class AchievementHelper extends Activity {
 
     // 解锁成就的方法
     private void unlockAchievement(String achievementName) {
-//        SQLiteDatabase db = mOpenHelper.getWritableDatabase();  // 确保你有对数据库的引用
-        // 获取当前时间戳
-        long currentTime = System.currentTimeMillis();
-
-        // 构建和执行更新语句
-//        String sql = "UPDATE achievements SET unlocked = 1, unlock_time = ? WHERE name = ?";
-//        db.execSQL(sql, new Object[]{currentTime, achievementName});
-
+        // 更新数据库
+        ActivityDiaryContentProvider.unlockAchievement_by_ID(1);
         // 显示通知
-//        Context context = AchievementHelper.this;
         Toast.makeText(context, "成就解锁: " + achievementName, Toast.LENGTH_LONG).show();
     }
 

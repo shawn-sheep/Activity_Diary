@@ -19,13 +19,26 @@
 package de.rampro.activitydiary.ui.generic;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+
+import java.util.List;
 
 import de.rampro.activitydiary.R;
+import de.rampro.activitydiary.db.ActivityDiaryContentProvider;
+import de.rampro.activitydiary.db.LocalDBHelper;
+import de.rampro.activitydiary.model.Achievement;
 /*
  * ActivityDiary
  *
@@ -45,46 +58,37 @@ import de.rampro.activitydiary.R;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class AchievementActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class AchievementActivity extends AppCompatActivity {
+
+    private RecyclerView achievementsRecyclerView;
+    private AchievementsAdapter achievementsAdapter;
+
+//    private ActivityDiaryContentProvider provider; // 假设您有一个DBHelper类处理数据库操作
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_achievement);
 
-        //mDrawerToggle.setDrawerIndicatorEnabled(false);
+        achievementsRecyclerView = findViewById(R.id.achievements_recycler_view);
+        achievementsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        loadAchievements();
     }
 
-    @Override
-    public void onResume(){
-        mNavigationView.getMenu().findItem(R.id.nav_achievement).setChecked(true);
-        super.onResume();
+    private void loadAchievements() {
+        try {
+            // 从数据库中获取所有成就
+            List<Achievement> achievements = ActivityDiaryContentProvider.getAllAchievements();
+            achievementsAdapter = new AchievementsAdapter(achievements);
+            achievementsRecyclerView.setAdapter(achievementsAdapter);
+        } catch (Exception e) {
+            Log.e("AchievementActivity", "Error loading achievements", e);
+            Toast.makeText(this, "Error loading achievements", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // 在这里创建并返回一个 Loader<Cursor> 对象
-        // 你需要根据你的需求实现这个方法，加载需要的数据
-        return null; // 返回 null 是为了示例，实际需要根据你的需求返回一个 Loader 对象
-    }
 
-    @Override
-    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(android.content.Loader<Cursor> loader) {
-
-    }
-
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // 当数据加载完成后，你可以在这里处理加载的数据
-    }
-
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // 当 Loader 被重置时，可以执行一些清理操作
-    }
 }
+
 
