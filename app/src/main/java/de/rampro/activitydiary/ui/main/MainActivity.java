@@ -69,6 +69,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,6 +112,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
+import androidx.appcompat.app.AlertDialog;
+import android.content.DialogInterface;
 
 /*
  * MainActivity to show most of the UI, based on switching the fragements
@@ -194,10 +197,9 @@ public class MainActivity extends BaseActivity implements
     private InitListener mInitListener = new InitListener() {
         @Override
         public void onInit(int code) {
-
+            Log.d(TAG, "SpeechRecognizer init() code = " + code);
             if (code != ErrorCode.SUCCESS){
-
-                showMsg("nmd,wsm");
+                showMsg("初始化失败，错误码：" + code + ",请点击网址https://www.xfyun.cn/document/error-code查询解决方案");
             }
         }
     };
@@ -257,6 +259,19 @@ public class MainActivity extends BaseActivity implements
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         String res = resultBuffer.toString();
+
+        final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dia,null);
+        final EditText editText= (EditText) DialogView.findViewById();
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("IatResult").setView(DialogView);
+        editText.setText(res);
+        editText.setSelection(editText.getText().length());
+
+
+
+        builder.create().show();
+
+
         String[] params = format(res.split(" "));
         if(params[0].equals("Start")){
             String activity = params[1];
@@ -368,9 +383,13 @@ public class MainActivity extends BaseActivity implements
             showMsg("Undefined Option");
         }
     }
+    private int cnt = 0;
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
-            printResult(results);
+            if(!isLast){
+                cnt++;
+                printResult(results);
+            }
         }
         public void onError(SpeechError error){
             showMsg(error.getPlainDescription(true));
@@ -526,7 +545,15 @@ public class MainActivity extends BaseActivity implements
         }
         onActivityChanged(); /* do this at the very end to ensure that no Loader finishes its data loading before */
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mIat != null) {
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
+    }
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
