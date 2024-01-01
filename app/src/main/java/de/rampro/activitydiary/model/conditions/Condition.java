@@ -51,7 +51,7 @@ public abstract class Condition {
 
     /* it seems most conditions will need dedicated database operations, and we don't want
      * to mess up with the ContentProvider, so let's get a new helper here */
-    static LocalDBHelper mOpenHelper = new LocalDBHelper(ActivityDiaryApplication.getAppContext());
+    public static LocalDBHelper mOpenHelper = new LocalDBHelper(ActivityDiaryApplication.getAppContext());
 
     /* storage for the likelyhoods */
     private @NonNull List<Likelihood> result = new ArrayList<>(1);

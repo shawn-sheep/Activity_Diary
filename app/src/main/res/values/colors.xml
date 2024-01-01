@@ -30,6 +30,7 @@
     <color name="colorGreyTextSelected">#424242</color>
     <color name="activityTextColorDark">@color/colorGreyTextSelected</color>
     <color name="activityTextColorLight">#fefeee</color>
+    <color name="achievement_locked_color">#9E9E9E</color>
     <string-array name="activityColorPalette" translatable="false">
         <item>#e5535f</item>
         <item>#f0b9df</item>

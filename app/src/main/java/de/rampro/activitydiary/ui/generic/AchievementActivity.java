@@ -18,15 +18,27 @@
  */
 package de.rampro.activitydiary.ui.generic;
 
-import android.os.Build;
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import java.util.List;
 
 import de.rampro.activitydiary.R;
+import de.rampro.activitydiary.db.ActivityDiaryContentProvider;
+import de.rampro.activitydiary.db.LocalDBHelper;
+import de.rampro.activitydiary.model.Achievement;
 /*
  * ActivityDiary
  *
@@ -46,25 +58,37 @@ import de.rampro.activitydiary.R;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class AchievementActivity extends BaseActivity {
+public class AchievementActivity extends AppCompatActivity {
+
+    private RecyclerView achievementsRecyclerView;
+    private AchievementsAdapter achievementsAdapter;
+
+//    private ActivityDiaryContentProvider provider; // 假设您有一个DBHelper类处理数据库操作
 
     @Override
-    @SuppressWarnings("deprecation")
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_achievement);
 
+        achievementsRecyclerView = findViewById(R.id.achievements_recycler_view);
+        achievementsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
-
-        //mDrawerToggle.setDrawerIndicatorEnabled(false);
+        loadAchievements();
     }
 
-    @Override
-    public void onResume(){
-        mNavigationView.getMenu().findItem(R.id.nav_achievement).setChecked(true);
-        super.onResume();
+    private void loadAchievements() {
+        try {
+            // 从数据库中获取所有成就
+            List<Achievement> achievements = ActivityDiaryContentProvider.getAllAchievements();
+            achievementsAdapter = new AchievementsAdapter(achievements);
+            achievementsRecyclerView.setAdapter(achievementsAdapter);
+        } catch (Exception e) {
+            Log.e("AchievementActivity", "Error loading achievements", e);
+            Toast.makeText(this, "Error loading achievements", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
 }
+
+

@@ -18,18 +18,22 @@
  */
 package de.rampro.activitydiary.ui.main;
 
+import static android.os.Environment.getExternalStorageDirectory;
+
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,6 +68,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,8 +95,27 @@ import de.rampro.activitydiary.ui.generic.EditActivity;
 import de.rampro.activitydiary.ui.history.HistoryDetailActivity;
 import de.rampro.activitydiary.ui.settings.SettingsActivity;
 
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
+import androidx.appcompat.app.AlertDialog;
+import android.content.DialogInterface;
+
 /*
- * MainActivity to show most of the UI, based on switching the fragements
+ * MainActivity to show most of the UI, based on switching the fragments
  *
  * */
 public class MainActivity extends BaseActivity implements
@@ -120,11 +144,26 @@ public class MainActivity extends BaseActivity implements
     private int searchRowCount, normalRowCount;
     private FloatingActionButton fabNoteEdit;
     private FloatingActionButton fabAttachPicture;
+
+    private FloatingActionButton fabVocalHelper;
     private SearchView searchView;
     private MenuItem searchMenuItem;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private View headerView;
+    private SpeechRecognizer mIat;// 语音听写对象
+    private RecognizerDialog mIatDialog;// 语音听写UI
+
+    // 用HashMap存储听写结果
+    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+
+    private SharedPreferences mSharedPreferences;//缓存
+
+    private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
+    private String language = "zh_cn";//识别语言
+
+//    private TextView tvResult = findViewById(R.id.tv_);//识别结果
+    private String resultType = "json";//结果内容数据格式
 
     private void setSearchMode(boolean searchMode){
         if(searchMode){
@@ -154,7 +193,247 @@ public class MainActivity extends BaseActivity implements
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+            Log.d(TAG, "SpeechRecognizer init() code = " + code);
+            if (code != ErrorCode.SUCCESS){
+                showMsg("初始化失败，错误码：" + code + ",请点击网址https://www.xfyun.cn/document/error-code查询解决方案");
+            }
+        }
+    };
+    private String[] format(String[] params){
+        List<String> res = new ArrayList<>();
+        for(String param: params){
+            param = param.trim();
+            if(param.length() > 0 && param.charAt(param.length()-1) == '.')
+                param = param.substring(0, param.length()-1);
+            if(!param.isEmpty()) {
+                param = param.toLowerCase();
+                param = Character.toUpperCase(param.charAt(0)) + param.substring(1);
+                res.add(param);
+            }
+        }
+        return res.toArray(new String[0]);
+    }
 
+    private String recoverToSentence(String[] params){
+        StringBuilder res = new StringBuilder();
+        for(int i = 1; i < params.length; i++){
+            String tmp;
+            if(i == 1)
+                tmp = Character.toUpperCase(params[i].charAt(0))+params[i].substring(1);
+            else
+                tmp = params[i].toLowerCase();
+            res.append(tmp);
+            if(i != params.length - 1)
+                res.append(" ");
+            else
+                res.append(".");
+        }
+        return res.toString();
+    }
+
+    private boolean process(String res){
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        String[] params = format(res.split(" "));
+        if(params[0].equals("Start")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (!tmp.moveToFirst()){
+                showMsg("There's no such activity.");
+                return false;
+            }
+            else{
+                String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
+                int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
+                int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
+                DiaryActivity newAct = new DiaryActivity(activity_id,activity_name,activity_color);
+                if(!newAct.equals(ActivityHelper.helper.getCurrentActivity())) {
+
+                    ActivityHelper.helper.setCurrentActivity(newAct);
+
+                    searchView.setQuery("", false);
+                    searchView.setIconified(true);
+
+
+                    SpannableStringBuilder snackbarText = new SpannableStringBuilder();
+                    snackbarText.append(newAct.getName());
+                    int end = snackbarText.length();
+                    snackbarText.setSpan(new ForegroundColorSpan(newAct.getColor()), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    snackbarText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    snackbarText.setSpan(new RelativeSizeSpan((float) 1.4152), 0, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+                    Snackbar undoSnackBar = Snackbar.make(findViewById(R.id.main_layout),
+                            snackbarText, Snackbar.LENGTH_LONG);
+                    undoSnackBar.setAction(R.string.action_undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.v(TAG, "UNDO Activity Selection");
+                            ActivityHelper.helper.undoLastActivitySelection();
+                        }
+                    });
+                    undoSnackBar.show();
+                }else{
+                    /* clicked the currently active activity in the list, so let's terminate it due to #176 */
+//                ActivityHelper.helper.setCurrentActivity(null);
+                    showMsg("It's already running now.");
+                    return false;
+                }
+            }
+        }
+        else if(params[0].equals("Stop")){
+            if(params[1].equals("Current")){
+                if(ActivityHelper.helper.getCurrentActivity() != null)
+                    ActivityHelper.helper.setCurrentActivity(null);
+                else
+                    showMsg("No current running activity.");
+            }
+        }
+        else if(params[0].equals("Create")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"_deleted", "name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (tmp.moveToFirst()){
+                int deleted = tmp.getInt(tmp.getColumnIndexOrThrow("_deleted"));
+                if(deleted == 0)
+                    showMsg("There's such an activity.");
+                else {
+                    ContentValues values = new ContentValues();
+                    values.put(ActivityDiaryContract.DiaryActivity._DELETED, 0);
+
+                    mQHandler.startUpdate(0,
+                            null,
+                            ContentUris.withAppendedId(ActivityDiaryContract.DiaryActivity.CONTENT_URI,
+                                    tmp.getLong(tmp.getColumnIndex(ActivityDiaryContract.DiaryActivity._ID))),
+                            values,
+                            ActivityDiaryContract.DiaryActivity._ID + "=?",
+                            new String[]{tmp.getString(tmp.getColumnIndex(ActivityDiaryContract.DiaryActivity._ID))}
+                    );
+                }
+            }
+            else{
+                int mActivityColor = GraphicsHelper.prepareColorForNextActivity();
+                ActivityHelper.helper.insertActivity(new DiaryActivity(-1, activity, mActivityColor));
+            }
+        }
+        else if(params[0].equals("Delete")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (!tmp.moveToFirst()){
+                showMsg("There's no such activity.");
+                return false;
+            }
+            else{
+                String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
+                int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
+                int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
+                DiaryActivity tarAct = new DiaryActivity(activity_id,activity_name,activity_color);
+//                if(!tarAct.equals(ActivityHelper.helper.getCurrentActivity())) {
+                ActivityHelper.helper.deleteActivity(tarAct);
+//                }else{
+////                    其实好像可以删除正在 running 的 activity
+//                   showMsg("You can't delete current running activity.");
+//                }
+            }
+        }
+        else if(params[0].equals("Note")){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                String content = recoverToSentence(params);
+                NoteEditDialog dialog = new NoteEditDialog();
+                dialog.setText(viewModel.mNote.getValue() + content);
+                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
+            } else
+                showMsg("No current running activity!");
+
+        }
+        else{
+            showMsg("Undefined Option");
+            return false;
+        }
+        return true;
+    }
+
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
+
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mIatResults.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : mIatResults.keySet()) {
+            resultBuffer.append(mIatResults.get(key));
+        }
+
+//        tvResult.setText(resultBuffer.toString());//听写结果显示
+//        showMsg(resultBuffer.toString());
+
+
+        String res = resultBuffer.toString();
+        if(!process(res)){
+            final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.edit_iat_res,null);
+            final EditText editText= (EditText) DialogView.findViewById(R.id.iat_res);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("IatResult").setView(DialogView);
+            editText.setText(res);
+            editText.setSelection(editText.getText().length());
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    String final_res = editText.getText().toString();
+                    process(final_res);
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    dialog.cancel();
+                }
+            });
+
+            builder.create().show();
+        }
+    }
+    private int cnt = 0;
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results,boolean isLast) {
+            if(!isLast){
+                cnt++;
+                printResult(results);
+            }
+        }
+        public void onError(SpeechError error){
+            showMsg(error.getPlainDescription(true));
+        }
+    };
+    private void showMsg(String msg){
+        Toast.makeText(MainActivity.this,msg,Toast.LENGTH_SHORT).show();
+    }
+    public void setParam() {
+        mIat.setParameter(SpeechConstant.PARAMS, null);
+        mIat.setParameter(SpeechConstant.ENGINE_TYPE, mEngineType);
+        mIat.setParameter(SpeechConstant.RESULT_TYPE, resultType);
+        mIat.setParameter(SpeechConstant.LANGUAGE,"en_us");
+        mIat.setParameter(SpeechConstant.VAD_BOS, mSharedPreferences.getString("iat_vadbos_preference", "4000"));
+        mIat.setParameter(SpeechConstant.VAD_EOS, mSharedPreferences.getString("iat_vadeos_preference", "1000"));
+        mIat.setParameter(SpeechConstant.ASR_PTT, mSharedPreferences.getString("iat_punc_preference", "1"));
+        mIat.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, getExternalFilesDir("msc").getAbsolutePath() + "/iat.wav");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +444,11 @@ public class MainActivity extends BaseActivity implements
         if (savedInstanceState != null) {
             mCurrentPhotoPath = savedInstanceState.getString("currentPhotoPath");
         }
+
+        // 语音识别相关初始化
+        mIat = SpeechRecognizer.createRecognizer(MainActivity.this, mInitListener);
+        mIatDialog = new RecognizerDialog(MainActivity.this,mInitListener);
+        mSharedPreferences = getSharedPreferences("ASR", Activity.MODE_PRIVATE);
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.activity_main_content, null, false);
@@ -208,14 +492,9 @@ public class MainActivity extends BaseActivity implements
 
         likelyhoodSort();
 
-
-
-
-
-
-
         fabNoteEdit = (FloatingActionButton) findViewById(R.id.fab_edit_note);
         fabAttachPicture = (FloatingActionButton) findViewById(R.id.fab_attach_picture);
+        fabVocalHelper = (FloatingActionButton) findViewById(R.id.vocal_helper);
 
         fabNoteEdit.setOnClickListener(v -> {
             // Handle the click on the FAB
@@ -262,6 +541,18 @@ public class MainActivity extends BaseActivity implements
             }
         });
 
+
+        fabVocalHelper.setOnClickListener(v->{
+            if( null == mIat){
+                showMsg("wrong");
+                return;
+            }
+            mIatResults.clear();
+            setParam();
+            mIatDialog.setListener(mRecognizerDialogListener);
+            mIatDialog.show();
+        });
+
         fabNoteEdit.show();
         PackageManager pm = getPackageManager();
 
@@ -279,7 +570,15 @@ public class MainActivity extends BaseActivity implements
         }
         onActivityChanged(); /* do this at the very end to ensure that no Loader finishes its data loading before */
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mIat != null) {
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
+    }
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -364,6 +663,7 @@ public class MainActivity extends BaseActivity implements
     public void onItemClick(int adapterPosition) {
 
         DiaryActivity newAct = selectAdapter.item(adapterPosition);
+//        DiaryActivity tmp = ActivityHelper.helper.getCurrentActivity();
         if(newAct != ActivityHelper.helper.getCurrentActivity()) {
 
             ActivityHelper.helper.setCurrentActivity(newAct);
