@@ -235,51 +235,18 @@ public class MainActivity extends BaseActivity implements
         return res.toString();
     }
 
-    private void printResult(RecognizerResult results) {
-        String text = JsonParser.parseIatResult(results.getResultString());
-
-        String sn = null;
-        // 读取json结果中的sn字段
-        try {
-            JSONObject resultJson = new JSONObject(results.getResultString());
-            sn = resultJson.optString("sn");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        mIatResults.put(sn, text);
-
-        StringBuffer resultBuffer = new StringBuffer();
-        for (String key : mIatResults.keySet()) {
-            resultBuffer.append(mIatResults.get(key));
-        }
-
-//        tvResult.setText(resultBuffer.toString());//听写结果显示
-//        showMsg(resultBuffer.toString());
+    private boolean process(String res){
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-
-        String res = resultBuffer.toString();
-
-        final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dia,null);
-        final EditText editText= (EditText) DialogView.findViewById();
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("IatResult").setView(DialogView);
-        editText.setText(res);
-        editText.setSelection(editText.getText().length());
-
-
-
-        builder.create().show();
-
-
         String[] params = format(res.split(" "));
         if(params[0].equals("Start")){
             String activity = params[1];
             Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
             if (tmp == null)
                 showMsg("Wrong: cursor points to null.");
-            else if (!tmp.moveToFirst())
+            else if (!tmp.moveToFirst()){
                 showMsg("There's no such activity.");
+                return false;
+            }
             else{
                 String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
                 int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
@@ -314,6 +281,7 @@ public class MainActivity extends BaseActivity implements
                     /* clicked the currently active activity in the list, so let's terminate it due to #176 */
 //                ActivityHelper.helper.setCurrentActivity(null);
                     showMsg("It's already running now.");
+                    return false;
                 }
             }
         }
@@ -358,8 +326,10 @@ public class MainActivity extends BaseActivity implements
             Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
             if (tmp == null)
                 showMsg("Wrong: cursor points to null.");
-            else if (!tmp.moveToFirst())
+            else if (!tmp.moveToFirst()){
                 showMsg("There's no such activity.");
+                return false;
+            }
             else{
                 String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
                 int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
@@ -381,6 +351,58 @@ public class MainActivity extends BaseActivity implements
         }
         else{
             showMsg("Undefined Option");
+            return false;
+        }
+        return true;
+    }
+
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
+
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mIatResults.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : mIatResults.keySet()) {
+            resultBuffer.append(mIatResults.get(key));
+        }
+
+//        tvResult.setText(resultBuffer.toString());//听写结果显示
+//        showMsg(resultBuffer.toString());
+
+
+        String res = resultBuffer.toString();
+        if(!process(res)){
+            final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.edit_iat_res,null);
+            final EditText editText= (EditText) DialogView.findViewById(R.id.iat_res);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("IatResult").setView(DialogView);
+            editText.setText(res);
+            editText.setSelection(editText.getText().length());
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    String final_res = editText.getText().toString();
+                    process(final_res);
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    dialog.cancel();
+                }
+            });
+
+            builder.create().show();
         }
     }
     private int cnt = 0;
