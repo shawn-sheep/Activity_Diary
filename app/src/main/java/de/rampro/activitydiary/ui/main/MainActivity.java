@@ -216,6 +216,22 @@ public class MainActivity extends BaseActivity implements
         return res.toArray(new String[0]);
     }
 
+    private String recoverToSentence(String[] params){
+        StringBuilder res = new StringBuilder();
+        for(int i = 1; i < params.length; i++){
+            String tmp;
+            if(i == 1)
+                tmp = Character.toUpperCase(params[i].charAt(0))+params[i].substring(1);
+            else
+                tmp = params[i].toLowerCase();
+            res.append(tmp);
+            if(i != params.length - 1)
+                res.append(" ");
+            else
+                res.append(".");
+        }
+        return res.toString();
+    }
 
     private void printResult(RecognizerResult results) {
         String text = JsonParser.parseIatResult(results.getResultString());
@@ -334,16 +350,19 @@ public class MainActivity extends BaseActivity implements
                 int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
                 int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
                 DiaryActivity tarAct = new DiaryActivity(activity_id,activity_name,activity_color);
-                if(!tarAct.equals(ActivityHelper.helper.getCurrentActivity())) {
-                    ActivityHelper.helper.deleteActivity(tarAct);
-                }else{
-//                    其实好像可以删除正在 running 的 activity
-                   showMsg("You can't delete current running activity.");
-                }
+//                if(!tarAct.equals(ActivityHelper.helper.getCurrentActivity())) {
+                ActivityHelper.helper.deleteActivity(tarAct);
+//                }else{
+////                    其实好像可以删除正在 running 的 activity
+//                   showMsg("You can't delete current running activity.");
+//                }
             }
         }
         else if(params[0].equals("Note")){
-
+            String content = recoverToSentence(params);
+            NoteEditDialog dialog = new NoteEditDialog();
+            dialog.setText(viewModel.mNote.getValue() + content);
+            dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
         }
         else{
             showMsg("Undefined Option");
