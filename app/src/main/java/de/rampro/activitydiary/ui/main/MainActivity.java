@@ -20,7 +20,6 @@ package de.rampro.activitydiary.ui.main;
 
 import android.Manifest;
 import android.app.SearchManager;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;

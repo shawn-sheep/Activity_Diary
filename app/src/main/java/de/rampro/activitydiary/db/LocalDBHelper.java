@@ -210,6 +210,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY(act_id) REFERENCES activity(_id) " +
                 ");");
 
+        //创建成就表
         db.execSQL(SQL_CREATE_ACHIEVEMENTS_TABLE);
 
         if (version >= 3) {

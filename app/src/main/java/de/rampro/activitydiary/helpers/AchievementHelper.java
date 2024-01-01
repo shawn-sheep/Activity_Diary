@@ -19,37 +19,57 @@
 
 package de.rampro.activitydiary.helpers;
 
-public class AchievementHelper {
+import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.widget.Toast;
 
-    public void checkAndUnlockSleepMasterAchievement() {
-        // 检查过去24小时内的睡眠次数
-        int sleepCount = countSleepActivitiesInLast24Hours();
-        if (sleepCount >= 3) {
-            unlockAchievement("睡觉大师");
+import androidx.appcompat.app.AppCompatActivity;
+
+import de.rampro.activitydiary.ActivityDiaryApplication;
+import de.rampro.activitydiary.R;
+import de.rampro.activitydiary.db.ActivityDiaryContentProvider;
+import de.rampro.activitydiary.db.ActivityDiaryContract;
+import de.rampro.activitydiary.model.DiaryActivity;
+import de.rampro.activitydiary.ui.main.MainActivity;
+
+public class AchievementHelper extends Activity {
+
+    private static Context context;
+    public AchievementHelper() {
+        AchievementHelper.context = ActivityDiaryApplication.getAppContext();
+    }
+
+    public void UpdateAchievements(DiaryActivity current_activity){
+        // 当结束的活动是“睡觉”时检查成就
+        if (current_activity != null && current_activity.getName().equals("Sleeping")) {
+            checkAndUnlockSleepMasterAchievement();
         }
     }
 
-    // 统计过去24小时内的睡眠次数
-    private int countSleepActivitiesInLast24Hours() {
-        final String sleepActivityName = "Sleep"; // 假设“睡眠”活动的名称是"Sleep"
-        int sleepCount = 0;
-
-        long currentTime = System.currentTimeMillis();
-        long oneDayAgo = currentTime - 86400000; // 24小时前的时间
-
-        // 伪代码 - 根据你的数据库结构实现查询逻辑
-        // 示例SQL: "SELECT COUNT(*) FROM diary WHERE act_id = (SELECT _id FROM activity WHERE name = 'Sleep') AND start > oneDayAgo"
-        // 实现数据库查询逻辑，统计过去24小时内睡眠活动的次数
-
-        return sleepCount;
+    private void checkAndUnlockSleepMasterAchievement() {
+        // 检查过去24小时内的睡眠次数
+        int sleepCount = ActivityDiaryContentProvider.countSleepActivitiesInLast24Hours();
+        if (sleepCount == 3) {
+            unlockAchievement("睡觉大师");
+        }
     }
 
 
     // 解锁成就的方法
     private void unlockAchievement(String achievementName) {
-        // 伪代码 - 更新数据库中的成就状态和解锁时间
-        // 例如: UPDATE achievements SET unlocked = 1, unlock_time = 当前时间 WHERE name = '睡觉大师';
-        // 可以在这里显示通知或其他UI反馈
+//        SQLiteDatabase db = mOpenHelper.getWritableDatabase();  // 确保你有对数据库的引用
+        // 获取当前时间戳
+        long currentTime = System.currentTimeMillis();
+
+        // 构建和执行更新语句
+//        String sql = "UPDATE achievements SET unlocked = 1, unlock_time = ? WHERE name = ?";
+//        db.execSQL(sql, new Object[]{currentTime, achievementName});
+
+        // 显示通知
+//        Context context = AchievementHelper.this;
+        Toast.makeText(context, "成就解锁: " + achievementName, Toast.LENGTH_LONG).show();
     }
 
 

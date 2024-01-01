@@ -18,12 +18,11 @@
  */
 package de.rampro.activitydiary.ui.generic;
 
-import android.os.Build;
+import android.app.LoaderManager;
+import android.database.Cursor;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
+
+import androidx.loader.content.Loader;
 
 
 import de.rampro.activitydiary.R;
@@ -46,18 +45,13 @@ import de.rampro.activitydiary.R;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class AchievementActivity extends BaseActivity {
+public class AchievementActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     @Override
-    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_achievement);
-
-
-
-
 
         //mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
@@ -67,4 +61,30 @@ public class AchievementActivity extends BaseActivity {
         mNavigationView.getMenu().findItem(R.id.nav_achievement).setChecked(true);
         super.onResume();
     }
+
+    @Override
+    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // 在这里创建并返回一个 Loader<Cursor> 对象
+        // 你需要根据你的需求实现这个方法，加载需要的数据
+        return null; // 返回 null 是为了示例，实际需要根据你的需求返回一个 Loader 对象
+    }
+
+    @Override
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+
+    }
+
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // 当数据加载完成后，你可以在这里处理加载的数据
+    }
+
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // 当 Loader 被重置时，可以执行一些清理操作
+    }
 }
+
