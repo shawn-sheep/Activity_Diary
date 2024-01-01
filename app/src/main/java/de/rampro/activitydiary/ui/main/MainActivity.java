@@ -27,6 +27,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -204,6 +205,8 @@ public class MainActivity extends BaseActivity implements
         List<String> res = new ArrayList<>();
         for(String param: params){
             param = param.trim();
+            if(param.length() > 0 && param.charAt(param.length()-1) == '.')
+                param = param.substring(0, param.length()-1);
             if(!param.isEmpty()) {
                 param = param.toLowerCase();
                 param = Character.toUpperCase(param.charAt(0)) + param.substring(1);
@@ -269,11 +272,6 @@ public class MainActivity extends BaseActivity implements
                     Snackbar undoSnackBar = Snackbar.make(findViewById(R.id.main_layout),
                             snackbarText, Snackbar.LENGTH_LONG);
                     undoSnackBar.setAction(R.string.action_undo, new View.OnClickListener() {
-                        /**
-                         * Called when a view has been clicked.
-                         *
-                         * @param v The view that was clicked.
-                         */
                         @Override
                         public void onClick(View v) {
                             Log.v(TAG, "UNDO Activity Selection");
@@ -287,26 +285,69 @@ public class MainActivity extends BaseActivity implements
                     showMsg("It's already running now.");
                 }
             }
-        }else if(params[0].equals("Stop")){
+        }
+        else if(params[0].equals("Stop")){
             if(params[1].equals("Current")){
                 if(ActivityHelper.helper.getCurrentActivity() != null)
                     ActivityHelper.helper.setCurrentActivity(null);
                 else
                     showMsg("No current running activity.");
             }
-        }else if(params[0].equals("Add")){
+        }
+        else if(params[0].equals("Create")){
+            String activity = params[1];
+            Cursor tmp = db.query("activity",new String [] {"_deleted", "name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
+            if (tmp == null)
+                showMsg("Wrong: cursor points to null.");
+            else if (tmp.moveToFirst()){
+                int deleted = tmp.getInt(tmp.getColumnIndexOrThrow("_deleted"));
+                if(deleted == 0)
+                    showMsg("There's such an activity.");
+                else {
+                    ContentValues values = new ContentValues();
+                    values.put(ActivityDiaryContract.DiaryActivity._DELETED, 0);
+
+                    mQHandler.startUpdate(0,
+                            null,
+                            ContentUris.withAppendedId(ActivityDiaryContract.DiaryActivity.CONTENT_URI,
+                                    tmp.getLong(tmp.getColumnIndex(ActivityDiaryContract.DiaryActivity._ID))),
+                            values,
+                            ActivityDiaryContract.DiaryActivity._ID + "=?",
+                            new String[]{tmp.getString(tmp.getColumnIndex(ActivityDiaryContract.DiaryActivity._ID))}
+                    );
+                }
+            }
+            else{
+                int mActivityColor = GraphicsHelper.prepareColorForNextActivity();
+                ActivityHelper.helper.insertActivity(new DiaryActivity(-1, activity, mActivityColor));
+            }
+        }
+        else if(params[0].equals("Delete")){
             String activity = params[1];
             Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
             if (tmp == null)
                 showMsg("Wrong: cursor points to null.");
-            else if (tmp.moveToFirst())
-                showMsg("There's such an activity.");
+            else if (!tmp.moveToFirst())
+                showMsg("There's no such activity.");
             else{
-
+                String activity_name = tmp.getString(tmp.getColumnIndexOrThrow("name"));
+                int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
+                int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
+                DiaryActivity tarAct = new DiaryActivity(activity_id,activity_name,activity_color);
+                if(!tarAct.equals(ActivityHelper.helper.getCurrentActivity())) {
+                    ActivityHelper.helper.deleteActivity(tarAct);
+                }else{
+//                    其实好像可以删除正在 running 的 activity
+                   showMsg("You can't delete current running activity.");
+                }
             }
         }
+        else if(params[0].equals("Note")){
 
-
+        }
+        else{
+            showMsg("Undefined Option");
+        }
     }
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
