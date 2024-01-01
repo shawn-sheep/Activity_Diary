@@ -23,7 +23,6 @@ import static android.os.Environment.getExternalStorageDirectory;
 import android.Manifest;
 import android.app.Activity;
 import android.app.SearchManager;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
@@ -116,7 +115,7 @@ import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 
 /*
- * MainActivity to show most of the UI, based on switching the fragements
+ * MainActivity to show most of the UI, based on switching the fragments
  *
  * */
 public class MainActivity extends BaseActivity implements

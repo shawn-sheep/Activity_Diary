@@ -398,6 +398,7 @@ public class ActivityHelper extends AsyncQueryHandler{
     public String getCurrentNote() { return mCurrentNote;}
     public void setCurrentNote(String str) { mCurrentNote = str;}
 
+    private final AchievementHelper AH = new AchievementHelper();
     public void setCurrentActivity(@Nullable DiaryActivity activity){
         /* update the current diary entry to "finish" it
          * in theory there should be only one entry with end = NULL in the diary table
@@ -409,7 +410,15 @@ public class ActivityHelper extends AsyncQueryHandler{
 
             startUpdate(UPDATE_CLOSE_ACTIVITY, timestamp, ActivityDiaryContract.Diary.CONTENT_URI,
                     values, ActivityDiaryContract.Diary.END + " is NULL", null);
+            try {
+                long sleepTimeInMillis = 100; // 休眠1秒钟
+                Thread.sleep(sleepTimeInMillis);
+            } catch (InterruptedException e) {
+                // 如果在休眠期间被中断，会抛出 InterruptedException 异常
+                e.printStackTrace();
+            }
 
+            AH.UpdateAchievements(mCurrentActivity);
             mCurrentActivity = activity;
             mCurrentDiaryUri = null;
             mCurrentActivityStartTime.setTime(timestamp);

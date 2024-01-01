@@ -350,5 +350,6 @@
     <string name="privacy_contact_text">If you have questions or comments about this Privacy Policy, please contact us at:</string>
     <string name="privacy_contact_address" translatable="false">Raphael Mack, Joh.-Seb.-Bach-Str. 3, 74321 Bietigheim-Bissingen (Germany)</string>
     <string name="privacy_contact_email" translatable="false">activity-diary@rampro.de</string>
+    <string name="achievement_description">Resently achieved achievement</string>
 
 </resources>

@@ -118,7 +118,7 @@ public class ActivityDiaryContentProvider extends ContentProvider {
 
     }
 
-    private LocalDBHelper mOpenHelper;
+    private static LocalDBHelper mOpenHelper;
 
     @Override
     public boolean onCreate() {
@@ -706,4 +706,31 @@ public class ActivityDiaryContentProvider extends ContentProvider {
         // otherwise it will return query with IDs of matching dates
         return querySelection.equals(" ") ?  " start=null" : querySelection;
     }
+
+    public static int countSleepActivitiesInLast24Hours() {
+        int count = 0;
+//        if(mOpenHelper == null)onCreate();
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+        // 获取当前时间和24小时前的时间戳
+        long currentTime = System.currentTimeMillis();
+        long oneDayAgo = currentTime - 86400000;
+
+        // 构建查询
+        String query = "SELECT COUNT(*) FROM diary d " +
+                "JOIN activity a ON d.act_id = a._id " +
+                "WHERE d.start >= ? AND d.'end' <= ? AND a.name = 'Sleeping' AND a._deleted = 0";
+
+        // 执行查询
+        Cursor cursor = db.rawQuery(query, new String[] { String.valueOf(oneDayAgo), String.valueOf(currentTime) });
+
+        // 处理结果
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
 }
