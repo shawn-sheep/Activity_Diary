@@ -49,6 +49,8 @@ public class AchievementHelper extends Activity {
         // 当结束的活动是“睡觉”时检查成就
         if (current_activity != null && current_activity.getName().equals("Sleeping")) {
             checkAndUnlockSleepMasterAchievement();
+            checkAndUnlockSleepExpertAchievement();
+            checkAndUnlockSleepLegendAchievement();
         }
     }
 
@@ -56,7 +58,23 @@ public class AchievementHelper extends Activity {
         // 检查过去24小时内的睡眠次数
         int sleepCount = ActivityDiaryContentProvider.countSleepActivitiesInLast24Hours();
         if (sleepCount == 3) {
-            unlockAchievement("睡觉大师");
+            unlockAchievement("睡眠大师");
+        }
+    }
+
+    private void checkAndUnlockSleepExpertAchievement() {
+        // 检查过去48小时内的睡眠次数
+        int sleepCount = ActivityDiaryContentProvider.countSleepActivitiesInLast48Hours();
+        if (sleepCount == 5) {
+            unlockAchievement("睡眠专家");
+        }
+    }
+
+    private void checkAndUnlockSleepLegendAchievement() {
+        // 检查过去一周内的总睡眠时间
+        int totalSleepHours = ActivityDiaryContentProvider.getTotalSleepHoursInLastWeek();
+        if (totalSleepHours >= 50) {
+            unlockAchievement("睡眠传奇");
         }
     }
 
@@ -64,7 +82,7 @@ public class AchievementHelper extends Activity {
     // 解锁成就的方法
     private void unlockAchievement(String achievementName) {
         // 更新数据库
-        ActivityDiaryContentProvider.unlockAchievement_by_ID(1);
+        ActivityDiaryContentProvider.unlockAchievement_by_Name(achievementName);
         // 显示通知
         Toast.makeText(context, "成就解锁: " + achievementName, Toast.LENGTH_LONG).show();
     }
