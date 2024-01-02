@@ -114,9 +114,11 @@ import java.util.LinkedHashMap;
 import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 /*
  * MainActivity to show most of the UI, based on switching the fragments
@@ -240,6 +242,28 @@ public class MainActivity extends BaseActivity implements
         }
         return res.toString();
     }
+    private static long convertEnglishToArabic(String englishNumber) {
+        if(englishNumber.equals("One"))
+            return 1;
+        else if(englishNumber.equals("Two"))
+            return 2;
+        else if(englishNumber.equals("Three"))
+            return 3;
+        else if(englishNumber.equals("Four"))
+            return 4;
+        else if(englishNumber.equals("Five"))
+            return 5;
+        else if(englishNumber.equals("Six"))
+            return 6;
+        else if(englishNumber.equals("Seven"))
+            return 7;
+        else if(englishNumber.equals("Eight"))
+            return 8;
+        else if(englishNumber.equals("Nine"))
+            return 9;
+        else
+            return -1;
+    }
 
     private boolean process(String res){
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
@@ -332,26 +356,30 @@ public class MainActivity extends BaseActivity implements
         }
         else if(params[0].equals("Countdown") && params.length == 3){
             if(ActivityHelper.helper.getCurrentActivity() != null){
+                double n = 0;
                 try{
-                    double n = Double.parseDouble(params[1]);
-                    int f=1000;
-                    if(params[2].equals("Seconds"))
-                        f*=1;
-                    else if(params[2].equals("Minutes"))
-                        f*=60;
-                    else if(params[2].equals("Hours"))
-                        f*=3600;
-                    else{
-                        showMsg("The unit of time must be seconds, minutes or hours");
-                        return false;
-                    }
-                    startCountDown((long)(n*f));
-                    showMsg("Countdown  start.");
+                    n = Double.parseDouble(params[1]);
                 }
                 catch (NumberFormatException e) {
-                    showMsg("You must countdown an integer number of time.");
+                    n = convertEnglishToArabic(params[1]);
+                    if(n == -1){
+                        showMsg("You must countdown an integer number of time.");
+                        return false;
+                    }
+                }
+                int f=1000;
+                if(params[2].equals("Seconds"))
+                    f*=1;
+                else if(params[2].equals("Minutes"))
+                    f*=60;
+                else if(params[2].equals("Hours"))
+                    f*=3600;
+                else{
+                    showMsg("The unit of time must be seconds, minutes or hours");
                     return false;
                 }
+                startCountDown((long)(n*f));
+                showMsg("Countdown  start.");
             }
             else{
                 showMsg("No activity running now.");
@@ -515,6 +543,8 @@ public class MainActivity extends BaseActivity implements
     private void stopMusic() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
         }
     }
     private void startCountDown(long millisInFuture) {

@@ -59,6 +59,7 @@ public class UserManualActivity extends BaseActivity {
         mergedmanualText += "<p><b>" + "Create + activity_name: create a new activity with random color." + "</b></p>";
         mergedmanualText += "<p><b>" + "Delete + activity_name: delete an existing activity." + "</b></p>";
         mergedmanualText += "<p><b>" + "Note + sentence: Add note to current running activity." + "</b></p>";
+        mergedmanualText += "<p><b>" + "Count + realnumber +(seconds, minutes, hours): Add a countdown timer for current running activity, when expired it will alert you." + "</b></p>";
         mergedmanualText += "<p>" + "Once your voice command is successfully recognized, it will be executed. On the other hand, a pop-up window will pop up with recognizing result in it. You can edit it and execute it again." + "</p>";
 
 
