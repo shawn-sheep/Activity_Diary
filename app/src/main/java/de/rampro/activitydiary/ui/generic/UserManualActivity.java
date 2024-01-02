@@ -38,7 +38,7 @@ public class UserManualActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_privacy_policy);
+        setContentView(R.layout.activity_user_manual);
 
         /*
         Uri data = getIntent().getData();
@@ -50,53 +50,62 @@ public class UserManualActivity extends BaseActivity {
         ActionBar bar = getSupportActionBar();
         if(bar != null) bar.setDisplayHomeAsUpEnabled(true);
 
-        TextView policyText = findViewById(R.id.policyTextView);
+        TextView manualText = findViewById(R.id.manualTextView);
 
-        String mergedPolicyText = "<h1>" + getResources().getString(R.string.activity_title_privacy_policy) + "</h1>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_text) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_intro_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_intro_text1) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_intro_text2) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_intro_text3) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_intro_text4) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_intro_text5) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_what_title) + "</h2>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle1) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText1a) + "</p>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle2) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText2a) + "</p>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle3) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText3a) + "</p>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle4) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText4a) + "</p>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle5) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText5a) + "</p>";
-        mergedPolicyText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle6) + "</h3>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText6a) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText6b) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText6c) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_what_subText6d) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_why_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_why_text1) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_why_text2) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_why_text3) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_how_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_how_text1) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_security_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_security_text) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_rights_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_rights_text) + "</p>";
-        mergedPolicyText += "<h2>" + getResources().getString(R.string.privacy_contact_title) + "</h2>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_contact_address) + "</p>";
-        mergedPolicyText += "<p>" + getResources().getString(R.string.privacy_contact_email) + "</p>";
+        String mergedmanualText = "<h1>" + "Vocal Helper" + "</h1>";
+        mergedmanualText += "<p>" + "You can click the microphone icon in the main page to use this function. It supports the options as follow:" + "</p>";
+        mergedmanualText += "<p><b>" + "Start + activity_name: start some activity." + "</b></p>";
+        mergedmanualText += "<p><b>" + "Stop current activity: stop current running activity." + "</b></p>";
+        mergedmanualText += "<p><b>" + "Create + activity_name: create a new activity with random color." + "</b></p>";
+        mergedmanualText += "<p><b>" + "Delete + activity_name: delete an existing activity." + "</b></p>";
+        mergedmanualText += "<p><b>" + "Note + sentence: Add note to current running activity." + "</b></p>";
+        mergedmanualText += "<p>" + "Once your voice command is successfully recognized, it will be executed. On the other hand, a pop-up window will pop up with recognizing result in it. You can edit it and execute it again." + "</p>";
+
+
+
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_intro_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_intro_text1) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_intro_text2) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_intro_text3) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_intro_text4) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_intro_text5) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_what_title) + "</h2>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle1) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText1a) + "</p>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle2) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText2a) + "</p>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle3) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText3a) + "</p>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle4) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText4a) + "</p>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle5) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText5a) + "</p>";
+//        mergedmanualText += "<h3>" + getResources().getString(R.string.privacy_what_subTitle6) + "</h3>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText6a) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText6b) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText6c) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_what_subText6d) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_why_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_why_text1) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_why_text2) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_why_text3) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_how_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_how_text1) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_security_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_security_text) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_rights_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_rights_text) + "</p>";
+//        mergedmanualText += "<h2>" + getResources().getString(R.string.privacy_contact_title) + "</h2>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_contact_address) + "</p>";
+//        mergedmanualText += "<p>" + getResources().getString(R.string.privacy_contact_email) + "</p>";
 
         if (Build.VERSION.SDK_INT >= 24) {
-            policyText.setText(Html.fromHtml(mergedPolicyText, Html.FROM_HTML_MODE_LEGACY));
+            manualText.setText(Html.fromHtml(mergedmanualText, Html.FROM_HTML_MODE_LEGACY));
         } else {
-            policyText.setText(Html.fromHtml(mergedPolicyText));
+            manualText.setText(Html.fromHtml(mergedmanualText));
         }
 
-        policyText.setMovementMethod(LinkMovementMethod.getInstance());
+        manualText.setMovementMethod(LinkMovementMethod.getInstance());
 
         mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
