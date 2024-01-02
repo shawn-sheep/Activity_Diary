@@ -20,10 +20,13 @@ package de.rampro.activitydiary.ui.generic;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -58,19 +61,21 @@ import de.rampro.activitydiary.model.Achievement;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class AchievementActivity extends AppCompatActivity {
+public class AchievementActivity extends BaseActivity {
 
     private RecyclerView achievementsRecyclerView;
     private AchievementsAdapter achievementsAdapter;
 
 //    private ActivityDiaryContentProvider provider; // 假设您有一个DBHelper类处理数据库操作
 
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_achievement);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.activity_achievement, null, false);
 
-        achievementsRecyclerView = findViewById(R.id.achievements_recycler_view);
+        setContent(contentView); // 设置内容视图
+
+        achievementsRecyclerView = contentView.findViewById(R.id.achievements_recycler_view);
         achievementsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         loadAchievements();
