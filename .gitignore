@@ -14,3 +14,5 @@ gplay-developer-9607db552238.p12
 .idea/deploymentTargetDropDown.xml
 .idea/gradle.xml
 .idea/modules.xml
+.idea/compiler.xml
+.idea/misc.xml
