@@ -30,6 +30,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import de.rampro.activitydiary.ActivityDiaryApplication;
 import de.rampro.activitydiary.R;
 import de.rampro.activitydiary.db.ActivityDiaryContentProvider;
@@ -45,14 +49,28 @@ public class AchievementHelper extends Activity {
         AchievementHelper.context = ActivityDiaryApplication.getAppContext();
     }
 
+    Long SLEEP_MASTER_ACHIEVEMENT_ID = 1L;
+    Long SLEEP_EXPERT_ACHIEVEMENT_ID = 2L;
+    Long SLEEP_LEGEND_ACHIEVEMENT_ID = 3L;
+
     public void UpdateAchievements(DiaryActivity current_activity){
-        // 当结束的活动是“睡觉”时检查成就
-        if (current_activity != null && current_activity.getName().equals("Sleeping")) {
-            checkAndUnlockSleepMasterAchievement();
-            checkAndUnlockSleepExpertAchievement();
-            checkAndUnlockSleepLegendAchievement();
+        if (current_activity != null) {
+            List<Long> achievementIds = ActivityDiaryContentProvider.getAchievementIdsForActivity(current_activity.getId());
+
+            for (Long achievementId : achievementIds) {
+                // 对于其他成就的处理
+                if (Objects.equals(achievementId, SLEEP_MASTER_ACHIEVEMENT_ID)) { // 假设这是睡眠大师成就的 ID
+                    checkAndUnlockSleepMasterAchievement();
+                } else if (Objects.equals(achievementId, SLEEP_EXPERT_ACHIEVEMENT_ID)) { // 假设这是睡眠专家成就的 ID
+                    checkAndUnlockSleepExpertAchievement();
+                } else if (Objects.equals(achievementId, SLEEP_LEGEND_ACHIEVEMENT_ID)) { // 假设这是睡眠传奇成就的 ID
+                    checkAndUnlockSleepLegendAchievement();
+                }
+            }
         }
     }
+
+
 
     private void checkAndUnlockSleepMasterAchievement() {
         // 检查过去24小时内的睡眠次数
