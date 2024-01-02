@@ -46,6 +46,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -407,18 +408,18 @@ public class ActivityHelper extends AsyncQueryHandler{
             ContentValues values = new ContentValues();
             Long timestamp = System.currentTimeMillis();
             values.put(ActivityDiaryContract.Diary.END, timestamp);
-
-            startUpdate(UPDATE_CLOSE_ACTIVITY, timestamp, ActivityDiaryContract.Diary.CONTENT_URI,
+            AbstractMap.SimpleEntry<Long,DiaryActivity> ck = new AbstractMap.SimpleEntry<Long, DiaryActivity>(timestamp,mCurrentActivity);
+            startUpdate(UPDATE_CLOSE_ACTIVITY, ck, ActivityDiaryContract.Diary.CONTENT_URI,
                     values, ActivityDiaryContract.Diary.END + " is NULL", null);
-            try {
-                long sleepTimeInMillis = 100; // 休眠1秒钟
-                Thread.sleep(sleepTimeInMillis);
-            } catch (InterruptedException e) {
-                // 如果在休眠期间被中断，会抛出 InterruptedException 异常
-                e.printStackTrace();
-            }
-
-            AH.UpdateAchievements(mCurrentActivity);
+//            try {
+//                long sleepTimeInMillis = 100; // 休眠1秒钟
+//                Thread.sleep(sleepTimeInMillis);
+//            } catch (InterruptedException e) {
+//                // 如果在休眠期间被中断，会抛出 InterruptedException 异常
+//                e.printStackTrace();
+//            }
+//
+//            AH.UpdateAchievements(mCurrentActivity);
             mCurrentActivity = activity;
             mCurrentDiaryUri = null;
             mCurrentActivityStartTime.setTime(timestamp);
@@ -529,16 +530,19 @@ public class ActivityHelper extends AsyncQueryHandler{
     @Override
     protected void onUpdateComplete(int token, Object cookie, int result) {
         if(token == UPDATE_CLOSE_ACTIVITY) {
+            AbstractMap.SimpleEntry<Long,DiaryActivity> ck = (AbstractMap.SimpleEntry<Long, DiaryActivity>) cookie;
             if(mCurrentActivity != null) {
                 /* create a new diary entry */
                 ContentValues values = new ContentValues();
 
                 values.put(ActivityDiaryContract.Diary.ACT_ID, mCurrentActivity.getId());
-                values.put(ActivityDiaryContract.Diary.START, (Long)cookie);
+                values.put(ActivityDiaryContract.Diary.START, ck.getKey());
 
                 startInsert(INSERT_NEW_DIARY_ENTRY, cookie, ActivityDiaryContract.Diary.CONTENT_URI,
                         values);
             }
+            AH.UpdateAchievements(ck.getValue());
+
         }else if(token == UPDATE_ACTIVITY){
             for(DataChangedListener listener : mDataChangeListeners) {
                 listener.onActivityDataChanged((DiaryActivity)cookie);
