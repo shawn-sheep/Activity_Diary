@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity implements
         List<String> res = new ArrayList<>();
         for(String param: params){
             param = param.trim();
-            if(param.length() > 0 && param.charAt(param.length()-1) == '.')
+            if(param.length() > 0 && (param.charAt(param.length()-1) == '.' || param.charAt(param.length()-1) == ','))
                 param = param.substring(0, param.length()-1);
             if(!param.isEmpty()) {
                 param = param.toLowerCase();
@@ -285,7 +285,7 @@ public class MainActivity extends BaseActivity implements
             }
         }
         else if(params[0].equals("Stop")){
-            if(params[1].equals("Current")){
+            if(params[1].equals("Current") && params[2].equals("Activity")){
                 if(ActivityHelper.helper.getCurrentActivity() != null)
                     ActivityHelper.helper.setCurrentActivity(null);
                 else
@@ -350,7 +350,6 @@ public class MainActivity extends BaseActivity implements
                 dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
             } else
                 showMsg("No current running activity!");
-
         }
         else{
             showMsg("Undefined Option");
@@ -408,11 +407,11 @@ public class MainActivity extends BaseActivity implements
             builder.create().show();
         }
     }
-    private int cnt = 0;
+//    private int cnt = 0;
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
             if(!isLast){
-                cnt++;
+//                cnt++;
                 printResult(results);
             }
         }
