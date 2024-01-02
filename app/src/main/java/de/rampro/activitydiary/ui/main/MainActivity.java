@@ -34,6 +34,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -113,6 +114,9 @@ import java.util.LinkedHashMap;
 import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 
 /*
  * MainActivity to show most of the UI, based on switching the fragments
@@ -164,6 +168,9 @@ public class MainActivity extends BaseActivity implements
 
 //    private TextView tvResult = findViewById(R.id.tv_);//识别结果
     private String resultType = "json";//结果内容数据格式
+//    public static Context MAcontext = null;
+    private CountDownTimer countDownTimer;
+    private MediaPlayer mediaPlayer;
 
     private void setSearchMode(boolean searchMode){
         if(searchMode){
@@ -252,7 +259,9 @@ public class MainActivity extends BaseActivity implements
                 int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
                 DiaryActivity newAct = new DiaryActivity(activity_id,activity_name,activity_color);
                 if(!newAct.equals(ActivityHelper.helper.getCurrentActivity())) {
-
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
                     ActivityHelper.helper.setCurrentActivity(newAct);
 
                     searchView.setQuery("", false);
@@ -277,17 +286,18 @@ public class MainActivity extends BaseActivity implements
                     });
                     undoSnackBar.show();
                 }else{
-                    /* clicked the currently active activity in the list, so let's terminate it due to #176 */
-//                ActivityHelper.helper.setCurrentActivity(null);
                     showMsg("It's already running now.");
-                    return false;
                 }
             }
         }
         else if(params[0].equals("Stop")){
             if(params[1].equals("Current") && params[2].equals("Activity")){
-                if(ActivityHelper.helper.getCurrentActivity() != null)
+                if(ActivityHelper.helper.getCurrentActivity() != null){
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
                     ActivityHelper.helper.setCurrentActivity(null);
+                }
                 else
                     showMsg("No current running activity.");
             }
@@ -320,6 +330,33 @@ public class MainActivity extends BaseActivity implements
                 ActivityHelper.helper.insertActivity(new DiaryActivity(-1, activity, mActivityColor));
             }
         }
+        else if(params[0].equals("Countdown") && params.length == 3){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                try{
+                    double n = Double.parseDouble(params[1]);
+                    int f=1000;
+                    if(params[2].equals("Seconds"))
+                        f*=1;
+                    else if(params[2].equals("Minutes"))
+                        f*=60;
+                    else if(params[2].equals("Hours"))
+                        f*=3600;
+                    else{
+                        showMsg("The unit of time must be seconds, minutes or hours");
+                        return false;
+                    }
+                    startCountDown((long)(n*f));
+                    showMsg("Countdown  start.");
+                }
+                catch (NumberFormatException e) {
+                    showMsg("You must countdown an integer number of time.");
+                    return false;
+                }
+            }
+            else{
+                showMsg("No activity running now.");
+            }
+        }
         else if(params[0].equals("Delete")){
             String activity = params[1];
             Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
@@ -334,12 +371,7 @@ public class MainActivity extends BaseActivity implements
                 int activity_id = tmp.getInt(tmp.getColumnIndexOrThrow("_id"));
                 int activity_color = tmp.getInt(tmp.getColumnIndexOrThrow("color"));
                 DiaryActivity tarAct = new DiaryActivity(activity_id,activity_name,activity_color);
-//                if(!tarAct.equals(ActivityHelper.helper.getCurrentActivity())) {
                 ActivityHelper.helper.deleteActivity(tarAct);
-//                }else{
-////                    其实好像可以删除正在 running 的 activity
-//                   showMsg("You can't delete current running activity.");
-//                }
             }
         }
         else if(params[0].equals("Note")){
@@ -357,6 +389,8 @@ public class MainActivity extends BaseActivity implements
         }
         return true;
     }
+
+
 
     private void printResult(RecognizerResult results) {
         String text = JsonParser.parseIatResult(results.getResultString());
@@ -433,9 +467,67 @@ public class MainActivity extends BaseActivity implements
         mIat.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
         mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, getExternalFilesDir("msc").getAbsolutePath() + "/iat.wav");
     }
+    private void initCountDownTimer(long initialMillis) {
+        countDownTimer = new CountDownTimer(initialMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                playMusic();
+            }
+        };
+    }
+    private void playMusic() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+        showAlertDialog();
+    }
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("The countdonw time has expired. Stop current activity?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+                ActivityHelper.helper.setCurrentActivity(null);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void stopMusic() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+    }
+    private void startCountDown(long millisInFuture) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        initCountDownTimer(millisInFuture);
+        countDownTimer.start();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
 
         viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
@@ -468,6 +560,9 @@ public class MainActivity extends BaseActivity implements
             if(PreferenceManager
                     .getDefaultSharedPreferences(ActivityDiaryApplication.getAppContext())
                     .getBoolean(SettingsActivity.KEY_PREF_DISABLE_CURRENT, true)){
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
                 ActivityHelper.helper.setCurrentActivity(null);
             }else{
                 Intent i = new Intent(MainActivity.this, HistoryDetailActivity.class);
@@ -577,6 +672,10 @@ public class MainActivity extends BaseActivity implements
             mIat.cancel();
             mIat.destroy();
         }
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        mediaPlayer.release();
     }
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -664,7 +763,9 @@ public class MainActivity extends BaseActivity implements
         DiaryActivity newAct = selectAdapter.item(adapterPosition);
 //        DiaryActivity tmp = ActivityHelper.helper.getCurrentActivity();
         if(newAct != ActivityHelper.helper.getCurrentActivity()) {
-
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
             ActivityHelper.helper.setCurrentActivity(newAct);
 
             searchView.setQuery("", false);
@@ -695,6 +796,9 @@ public class MainActivity extends BaseActivity implements
             undoSnackBar.show();
         }else{
             /* clicked the currently active activity in the list, so let's terminate it due to #176 */
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
             ActivityHelper.helper.setCurrentActivity(null);
         }
     }
@@ -870,6 +974,9 @@ public class MainActivity extends BaseActivity implements
 
         if (intent.hasExtra("SELECT_ACTIVITY_WITH_ID")) {
             int id = intent.getIntExtra("SELECT_ACTIVITY_WITH_ID", -1);
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
             ActivityHelper.helper.setCurrentActivity(ActivityHelper.helper.activityWithId(id));
         }
     }
