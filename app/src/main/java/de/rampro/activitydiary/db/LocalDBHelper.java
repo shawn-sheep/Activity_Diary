@@ -222,7 +222,8 @@ public class LocalDBHelper extends SQLiteOpenHelper {
 
         //创建成就表
         db.execSQL(SQL_CREATE_ACHIEVEMENTS_TABLE);
-
+        //创建事件关联成就表
+        createCorrespondingAchievementsTable(db);
         if (version >= 3) {
             createDiaryImageTable(db);
         }
@@ -243,7 +244,17 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                     AchievementEntry.COLUMN_NAME_DESCRIPTION + " TEXT," +
                     AchievementEntry.COLUMN_NAME_UNLOCKED + " INTEGER," +
                     AchievementEntry.COLUMN_NAME_UNLOCK_TIME + " INTEGER)";
-
+    private void createCorrespondingAchievementsTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " +
+                "CorrespondingAchievements " +
+                "(" +
+                "_id INTEGER PRIMARY KEY ASC, " +
+                "activity_id INTEGER NOT NULL, " +
+                "achievement_id INTEGER NOT NULL, " +
+                "FOREIGN KEY(activity_id) REFERENCES activity(_id), " +
+                "FOREIGN KEY(achievement_id) REFERENCES " + AchievementEntry.TABLE_NAME + "(" + AchievementEntry._ID + ")" +
+                ");");
+    }
     public static class AchievementEntry implements BaseColumns {
         public static final String TABLE_NAME = "achievement";
         public static final String COLUMN_NAME_TITLE = "title";
@@ -263,80 +274,74 @@ public class LocalDBHelper extends SQLiteOpenHelper {
         long newRowId = db.insert(AchievementEntry.TABLE_NAME, null, values);
         return newRowId;
     }
-    public void unlockAchievement(int achievementId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, 1); // 将解锁状态设置为true
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, System.currentTimeMillis()); // 设置解锁时间
+    private int getActivityID(SQLiteDatabase db, String activityName) {
+        String[] projection = {
+                "_id"
+        };
 
-        String selection = AchievementEntry._ID + " = ?";
-        String[] selectionArgs = { String.valueOf(achievementId) };
+        String selection = "name = ?";
+        String[] selectionArgs = { activityName };
 
-        try {
-            int count = db.update(
-                    AchievementEntry.TABLE_NAME,
-                    values,
-                    selection,
-                    selectionArgs);
+        Cursor cursor = db.query(
+                "activity",   // The table to query
+                projection,   // The columns to return
+                selection,    // The columns for the WHERE clause
+                selectionArgs,// The values for the WHERE clause
+                null,         // don't group the rows
+                null,         // don't filter by row groups
+                null          // The sort order
+        );
 
-            if (count > 0) {
-                Log.i("DBHelper", "Achievement unlocked with ID: " + achievementId);
-            } else {
-                Log.e("DBHelper", "Failed to unlock achievement with ID: " + achievementId);
-            }
-        } catch (Exception e) {
-            Log.e("DBHelper", "Error unlocking achievement", e);
+        int activityID = -1;
+        if (cursor != null && cursor.moveToFirst()) {
+            activityID = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+            cursor.close();
         }
+        return activityID;
     }
-    public void unlockAchievement(String achievementName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, 1); // 将解锁状态设置为true
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, System.currentTimeMillis()); // 设置解锁时间
 
-        String selection = AchievementEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = { achievementName };
-
-        try {
-            int count = db.update(
-                    AchievementEntry.TABLE_NAME,
-                    values,
-                    selection,
-                    selectionArgs);
-
-            if (count > 0) {
-                Log.i("DBHelper", "Achievement unlocked: " + achievementName);
-            } else {
-                Log.e("DBHelper", "Failed to unlock achievement: " + achievementName);
-            }
-        } catch (Exception e) {
-            Log.e("DBHelper", "Error unlocking achievement", e);
-        }
-    }
     private void Init_Achievement(SQLiteDatabase db){
-        // 添加睡眠大师成就
-        insertAchievement(db, "睡眠大师", "24小时内连续睡觉三次", 0, 0);
+        // 获取sleeping活动的ID
+        int sleepingActivityId = getActivityID(db, "Sleeping");
 
-        // 添加睡眠专家成就
-        insertAchievement(db, "睡眠专家", "48小时内连续睡觉五次", 0, 0);
+        // 添加并关联睡眠大师成就
+        long sleepingMasterId = insertAchievement(db, "睡眠大师", "24小时内连续睡觉三次", 0, 0);
+        insertCorrespondingAchievement(db, sleepingActivityId, sleepingMasterId);
 
-        // 添加睡眠传奇成就
-        insertAchievement(db, "睡眠传奇", "一周内累计睡眠超过50小时", 0, 0);
+        // 添加并关联睡眠专家成就
+        long sleepingExpertId = insertAchievement(db, "睡眠专家", "48小时内连续睡觉五次", 0, 0);
+        insertCorrespondingAchievement(db, sleepingActivityId, sleepingExpertId);
 
+        // 添加并关联睡眠传奇成就
+        long sleepingLegendId = insertAchievement(db, "睡眠传奇", "一周内累计睡眠超过50小时", 0, 0);
+        insertCorrespondingAchievement(db, sleepingActivityId, sleepingLegendId);
     }
 
-    private void insertAchievement(SQLiteDatabase db, String title, String description, int unlocked, int unlockTime) {
+    private long insertAchievement(SQLiteDatabase db, String title, String description, int unlocked, int unlockTime) {
         ContentValues values = new ContentValues();
         values.put(AchievementEntry.COLUMN_NAME_TITLE, title);
         values.put(AchievementEntry.COLUMN_NAME_DESCRIPTION, description);
         values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, unlocked);
         values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, unlockTime);
 
-        long newRowId = db.insert(AchievementEntry.TABLE_NAME, null, values);
+        return db.insert(AchievementEntry.TABLE_NAME, null, values);
+    }
+
+    private void insertCorrespondingAchievement(SQLiteDatabase db, int activityId, long achievementId) {
+        if (achievementId == -1) {
+            // 如果成就未成功插入，则不插入对应关系
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("activity_id", activityId);
+        values.put("achievement_id", achievementId);
+
+        long newRowId = db.insert("CorrespondingAchievements", null, values);
         if(newRowId == -1) {
-            Log.e("Init_Achievement", "Failed to insert " + title + " into the database.");
+            Log.e("Init_Achievement", "Failed to insert corresponding achievement into the database.");
         } else {
-            Log.i("Init_Achievement", title + " inserted with row ID: " + newRowId);
+            Log.i("Init_Achievement", "Corresponding achievement inserted with row ID: " + newRowId);
         }
     }
 
