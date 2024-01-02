@@ -124,6 +124,11 @@ public class BaseActivity extends AppCompatActivity {
                         startActivity(intentachieve);
                         break;
 
+                    case R.id.nav_manual:
+                        Intent intentmanual = new Intent(BaseActivity.this, UserManualActivity.class);
+                        startActivity(intentmanual);
+                        break;
+
                     default:
                         Toast.makeText(BaseActivity.this, menuItem.getTitle() + " is not yet implemented :-(", Toast.LENGTH_LONG).show();
                         break;

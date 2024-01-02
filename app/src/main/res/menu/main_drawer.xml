@@ -68,5 +68,9 @@
             android:id="@+id/nav_privacy"
             android:icon="@drawable/ic_action_privacy"
             android:title="@string/nav_privacy" />
+        <item
+            android:id="@+id/nav_manual"
+            android:icon="@drawable/ic_manual"
+            android:title="User Manual" />
     </group>
 </menu>
