@@ -636,7 +636,7 @@ public class ActivityHelper extends AsyncQueryHandler{
     }
 
     public void deleteActivity(DiaryActivity act) {
-        if(act == mCurrentActivity){
+        if(act.equals(mCurrentActivity)){
             setCurrentActivity(null);
         }
         ContentValues values = new ContentValues();
