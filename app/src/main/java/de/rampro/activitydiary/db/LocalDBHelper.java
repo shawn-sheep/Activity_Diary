@@ -314,27 +314,30 @@ public class LocalDBHelper extends SQLiteOpenHelper {
         }
     }
     private void Init_Achievement(SQLiteDatabase db){
-        // 创建一个新的ContentValues对象来存储成就的值
-        ContentValues values = new ContentValues();
-        // 添加成就名称
-        values.put(AchievementEntry.COLUMN_NAME_TITLE, "睡眠大师");
-        // 添加成就描述
-        values.put(AchievementEntry.COLUMN_NAME_DESCRIPTION, "一天内连续睡觉三次");
-        // 设置成就未解锁状态（0表示未解锁，1表示已解锁）
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, 0);
-        // 设置成就解锁时间，由于成就尚未解锁，这里可以设置为0或null
-        values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, 0); // 或者使用null
-        // 插入成就到数据库表中
-        long newRowId = db.insert(AchievementEntry.TABLE_NAME, null, values);
-        // 检查插入是否成功
-        if(newRowId == -1) {
-            // 如果是-1，表示插入失败
-            Log.e("Init_Achievement", "Failed to insert new achievement into the database.");
-        } else {
-            // 插入成功
-            Log.i("Init_Achievement", "Achievement inserted with row ID: " + newRowId);
-        }
+        // 添加睡眠大师成就
+        insertAchievement(db, "睡眠大师", "24小时内连续睡觉三次", 0, 0);
 
+        // 添加睡眠专家成就
+        insertAchievement(db, "睡眠专家", "48小时内连续睡觉五次", 0, 0);
+
+        // 添加睡眠传奇成就
+        insertAchievement(db, "睡眠传奇", "一周内累计睡眠超过50小时", 0, 0);
+
+    }
+
+    private void insertAchievement(SQLiteDatabase db, String title, String description, int unlocked, int unlockTime) {
+        ContentValues values = new ContentValues();
+        values.put(AchievementEntry.COLUMN_NAME_TITLE, title);
+        values.put(AchievementEntry.COLUMN_NAME_DESCRIPTION, description);
+        values.put(AchievementEntry.COLUMN_NAME_UNLOCKED, unlocked);
+        values.put(AchievementEntry.COLUMN_NAME_UNLOCK_TIME, unlockTime);
+
+        long newRowId = db.insert(AchievementEntry.TABLE_NAME, null, values);
+        if(newRowId == -1) {
+            Log.e("Init_Achievement", "Failed to insert " + title + " into the database.");
+        } else {
+            Log.i("Init_Achievement", title + " inserted with row ID: " + newRowId);
+        }
     }
 
 }

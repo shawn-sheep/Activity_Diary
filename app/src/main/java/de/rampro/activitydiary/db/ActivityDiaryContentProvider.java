@@ -735,36 +735,57 @@ public class ActivityDiaryContentProvider extends ContentProvider {
         return count;
     }
 
-//    public static List<Achievement> getAllAchievements() {
-//        List<Achievement> achievements = new ArrayList<>();
-//        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-//
-//        Cursor cursor = db.query(
-//                LocalDBHelper.AchievementEntry.TABLE_NAME,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null);
-//
-//        while(cursor.moveToNext()) {
-//            int id = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry._ID));
-//            String name = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry.COLUMN_NAME_TITLE));
-//            String description = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry.COLUMN_NAME_DESCRIPTION));
-//            boolean isUnlocked = cursor.getInt(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry.COLUMN_NAME_UNLOCKED)) == 1;
-//            long unlockTime = cursor.getLong(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry.COLUMN_NAME_UNLOCK_TIME));
-//
-//            Achievement achievement = new Achievement(id, name, description);
-//            achievement.setUnlocked(isUnlocked);
-//            achievement.setUnlockTime(unlockTime);
-//
-//            achievements.add(achievement);
-//        }
-//        cursor.close();
-//
-//        return achievements;
-//    }
+    public static int countSleepActivitiesInLast48Hours() {
+        int count = 0;
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+        // 获取当前时间和48小时前的时间戳
+        long currentTime = System.currentTimeMillis();
+        long twoDaysAgo = currentTime - (2 * 86400000); // 2天的毫秒数
+
+        // 构建查询
+        String query = "SELECT COUNT(*) FROM diary d " +
+                "JOIN activity a ON d.act_id = a._id " +
+                "WHERE d.start >= ? AND d.'end' <= ? AND a.name = 'Sleeping' AND a._deleted = 0";
+
+        // 执行查询
+        Cursor cursor = db.rawQuery(query, new String[] { String.valueOf(twoDaysAgo), String.valueOf(currentTime) });
+
+        // 处理结果
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public static int getTotalSleepHoursInLastWeek() {
+        int totalHours = 0;
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+
+        // 获取当前时间和一周前的时间戳
+        long currentTime = System.currentTimeMillis();
+        long oneWeekAgo = currentTime - (7 * 86400000); // 7天的毫秒数
+
+        // 构建查询来计算总睡眠时间
+        String query = "SELECT SUM(d.'end' - d.start) FROM diary d " +
+                "JOIN activity a ON d.act_id = a._id " +
+                "WHERE d.start >= ? AND d.'end' <= ? AND a.name = 'Sleeping' AND a._deleted = 0";
+
+        // 执行查询
+        Cursor cursor = db.rawQuery(query, new String[] { String.valueOf(oneWeekAgo), String.valueOf(currentTime) });
+
+        // 处理结果
+        if (cursor.moveToFirst()) {
+            // 将毫秒转换为小时
+            totalHours = cursor.getInt(0) / (3600000);
+        }
+        cursor.close();
+
+        return totalHours;
+    }
+
 public static List<Achievement> getAllAchievements() {
     SQLiteDatabase db = mOpenHelper.getWritableDatabase();
     List<Achievement> achievements = new ArrayList<>();
@@ -806,31 +827,8 @@ public static List<Achievement> getAllAchievements() {
     return achievements;
 }
 
-//有bug，不能使用
     public static void unlockAchievement_by_Name(String achievementName) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(LocalDBHelper.AchievementEntry.COLUMN_NAME_UNLOCKED, 1); // 将解锁状态设置为true
-        values.put(LocalDBHelper.AchievementEntry.COLUMN_NAME_UNLOCK_TIME, System.currentTimeMillis()); // 设置解锁时间
-
-        String selection = LocalDBHelper.AchievementEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = { achievementName };
-
-        try {
-            int count = db.update(
-                    LocalDBHelper.AchievementEntry.TABLE_NAME,
-                    values,
-                    selection,
-                    selectionArgs);
-
-            if (count > 0) {
-                Log.i("DBHelper", "Achievement unlocked: " + achievementName);
-            } else {
-                Log.e("DBHelper", "Failed to unlock achievement: " + achievementName);
-            }
-        } catch (Exception e) {
-            Log.e("DBHelper", "Error unlocking achievement", e);
-        }
+        unlockAchievement_by_ID(Get_Achievement_id(achievementName));
     }
     public static void unlockAchievement_by_ID(int achievementId) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -857,6 +855,47 @@ public static List<Achievement> getAllAchievements() {
             Log.e("DBHelper", "Error unlocking achievement", e);
         }
     }
+    /**
+     * 通过成就名称获取成就 ID。
+     * @param db 数据库实例。
+     * @param achievementName 要查询的成就名称。
+     * @return 成就 ID 或 -1（如果未找到）。
+     */
+    public static int Get_Achievement_id( String achievementName) {
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            // 准备查询
+            String[] projection = {LocalDBHelper.AchievementEntry._ID};
+            String selection = LocalDBHelper.AchievementEntry.COLUMN_NAME_TITLE + " = ?";
+            String[] selectionArgs = {achievementName};
+
+            // 执行查询
+            cursor = db.query(
+                    LocalDBHelper.AchievementEntry.TABLE_NAME,  // 表名称
+                    projection,                   // 要返回的列
+                    selection,                    // WHERE 子句
+                    selectionArgs,                // WHERE 子句的参数
+                    null,                         // 不分组行
+                    null,                         // 不过滤行组
+                    null                          // 不排序
+            );
+
+            // 检查结果并返回 ID
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getInt(cursor.getColumnIndexOrThrow(LocalDBHelper.AchievementEntry._ID));
+            }
+            return -1; // 未找到成就
+        } catch (Exception e) {
+            Log.e("LocalDBHelper", "Error fetching achievement ID", e);
+            return -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close(); // 确保关闭 Cursor
+            }
+        }
+    }
+
     private static void testdb(){
         // 获取数据库实例
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
