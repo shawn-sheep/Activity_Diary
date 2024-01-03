@@ -274,7 +274,6 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         mIat = SpeechRecognizer.createRecognizer(DetailActivity.this, mInitListener);
         mIatDialog = new RecognizerDialog(DetailActivity.this,mInitListener);
         mSharedPreferences = getSharedPreferences("ASR", Activity.MODE_PRIVATE);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             linkCol = getResources().getColor(R.color.colorAccent, null);
         } else {
@@ -316,20 +315,28 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_cancel);
         tvTips.setText(getIntent().getStringExtra("tips"));
-        isStart = true; // 假设页面打开时开始计时
-        baseTimer = SystemClock.elapsedRealtime();
-        startTimer(); // 开始计时
+        this.baseTimer = SystemClock.elapsedRealtime();
+
         ivPlay.setImageResource(R.drawable.baseline_not_started_24);
         isStart = true;
 
-//        // 设置播放按钮的点击监听器
-//        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                toggleTimer();
-//            }
-//        });
+        // 设置播放按钮的点击监听器
+
+        if (savedInstanceState != null) {
+            // 恢复保存的状态
+            // ...
+        } else {
+            // 从头开始计时
+            startTimer();
+        }
+        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleTimer();
+            }
+        });
     }
+
 
     private void toggleTimer() {
         if (isStart) {
@@ -823,7 +830,6 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         if(ActivityHelper.helper.getCurrentActivity()!=null)
             ActivityHelper.helper.setCurrentActivity(null);
 
-        super.onDestroy();
         stopTimer(); // 在销毁活动时停止计时器
 
     }

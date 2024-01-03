@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
 
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
         android:id="@+id/rl_content"
-
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+        android:orientation="vertical"
         android:padding="8dp">
 
         <LinearLayout
@@ -28,15 +27,15 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edit_activity_name"
-                    android:gravity="center"
-                    android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:gravity="center"
                     android:hint=""
                     android:inputType="textCapWords|textAutoCorrect"
                     android:maxLines="1"
-                    android:textSize="56sp"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="56sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,52 +44,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/contentDesc_undeleteActivity"
                 android:elevation="2dp"
                 android:visibility="gone"
-                android:contentDescription="@string/contentDesc_undeleteActivity"
-                app:srcCompat="@drawable/ic_undelete"
-                />
+                app:srcCompat="@drawable/ic_undelete" />
 
             <ImageButton
                 android:id="@+id/quickFixButtonRename"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/contentDesc_renameDeletedActivity"
                 android:elevation="1dp"
                 android:visibility="gone"
-                android:contentDescription="@string/contentDesc_renameDeletedActivity"
                 app:srcCompat="@drawable/ic_rename_deleted" />
 
         </LinearLayout>
 
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center"
-            android:orientation="vertical"
             android:layout_weight="1"
-            >
+            android:gravity="center"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center"
-                android:orientation="vertical"
                 android:layout_weight="1"
-                >`
+                android:gravity="center"
+                android:orientation="vertical">`
+
                 <TextView
                     android:id="@+id/tv_time"
                     android:layout_width="370dp"
+                    android:layout_height="350dp"
+                    android:background="@mipmap/ic_circle2"
                     android:gravity="center"
-                    android:textSize="50sp"
-                    android:textStyle="bold"
                     android:textColor="#ffffff"
 
-                    android:background="@mipmap/ic_circle2"
-                    android:layout_height="350dp"></TextView>
+                    android:textSize="50sp"
+                    android:textStyle="bold"></TextView>
 
                 <ImageView
                     android:id="@+id/iv_play"
@@ -106,26 +101,13 @@
             <TextView
                 android:id="@+id/tv_tips"
                 android:layout_width="match_parent"
-                android:textColor="#ffffff"
-                android:padding="20dp"
-                android:textStyle="bold"
-                android:textSize="27sp"
+                android:layout_height="150dp"
                 android:gravity="left"
+                android:padding="20dp"
                 android:text="Since: 11 min 45 sec agoAverageDuration: 14 minLastStart: 2023/10/17, 19 :00LastDuration: 19min"
-                android:layout_height="200dp"
-                ></TextView>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/vocal_helper_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_vocal_helper"
-                android:visibility="visible"
-                app:fabSize="normal"
-                app:layout_anchorGravity="bottom|right|end" />
+                android:textColor="#ffffff"
+                android:textSize="27sp"
+                android:textStyle="bold"></TextView>
 
 
         </LinearLayout>
@@ -135,10 +117,22 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
 
         >
 
     </FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/vocal_helper_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_vocal_helper"
+        android:visibility="visible"
+        app:fabSize="normal" />
 </RelativeLayout>
