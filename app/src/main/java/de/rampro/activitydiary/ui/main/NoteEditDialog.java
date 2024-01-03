@@ -30,7 +30,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import de.rampro.activitydiary.ActivityDiaryApplication;
 import de.rampro.activitydiary.R;
+import de.rampro.activitydiary.ui.statistics.DetailActivity;
 
 public class NoteEditDialog extends DialogFragment {
     private String note;

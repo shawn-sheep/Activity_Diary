@@ -54,11 +54,12 @@ public class UserManualActivity extends BaseActivity {
 
         String mergedmanualText = "<h1>" + "Voice Assistant" + "</h1>";
         mergedmanualText += "<p>" + "You can click the microphone icon in the main page to use this function. It supports the options as follow:" + "</p>";
+        mergedmanualText += "<p><b>" + "When there's no activity running:" + "</b></p>";
         mergedmanualText += "<p><b>" + "Start + activity_name: start some activity." + "</b></p>";
-        mergedmanualText += "<p><b>" + "Stop current activity: stop current running activity." + "</b></p>";
         mergedmanualText += "<p><b>" + "Create + activity_name: create a new activity with random color." + "</b></p>";
         mergedmanualText += "<p><b>" + "Delete + activity_name: delete an existing activity." + "</b></p>";
-        mergedmanualText += "<p><b>" + "Note + sentence: Add note to current running activity." + "</b></p>";
+        mergedmanualText += "<p><b>" + "When there's an activity running:" + "</b></p>";
+        mergedmanualText += "<p><b>" + "Stop current activity: stop current running activity." + "</b></p>";
         mergedmanualText += "<p><b>" + "Countdown + realnumber + (seconds, minutes, hours): Add a countdown timer for current running activity. And when time expired it will alert you." + "</b></p>";
         mergedmanualText += "<p>" + "Once your voice command is successfully recognized, it will be executed. On the other hand, a window will pop up with recognizing result in it. You can edit it and execute again." + "</p>";
 

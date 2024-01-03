@@ -22,6 +22,9 @@ package de.rampro.activitydiary.ui.statistics;
 import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.AsyncQueryHandler;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +34,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -39,6 +43,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -59,8 +64,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -80,6 +87,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,14 +98,17 @@ import de.rampro.activitydiary.ActivityDiaryApplication;
 import de.rampro.activitydiary.R;
 import de.rampro.activitydiary.db.ActivityDiaryContract;
 import de.rampro.activitydiary.helpers.ActivityHelper;
+import de.rampro.activitydiary.helpers.DateHelper;
 import de.rampro.activitydiary.helpers.GraphicsHelper;
 import de.rampro.activitydiary.helpers.JaroWinkler;
+import de.rampro.activitydiary.helpers.TimeSpanFormatter;
 import de.rampro.activitydiary.model.DetailViewModel;
 import de.rampro.activitydiary.model.DiaryActivity;
 import de.rampro.activitydiary.ui.generic.BaseActivity;
 import de.rampro.activitydiary.ui.main.JsonParser;
 import de.rampro.activitydiary.ui.main.MainActivity;
 import de.rampro.activitydiary.ui.main.NoteEditDialog;
+import de.rampro.activitydiary.ui.settings.SettingsActivity;
 
 
 public class DetailActivity extends BaseActivity implements ActivityHelper.DataChangedListener {
@@ -167,6 +178,72 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
     private MediaPlayer mediaPlayer;
     private SearchView searchView;
     private DetailViewModel viewModel;
+    private static final int QUERY_CURRENT_ACTIVITY_STATS = 1;
+    private static final int QUERY_CURRENT_ACTIVITY_TOTAL = 2;
+    private String tips="-";
+    private class StatParam {
+        public int field;
+        public long end;
+        public StatParam(int field, long end) {
+            this.field = field;
+            this.end = end;
+        }
+    }
+
+    private class MainAsyncQueryHandler extends AsyncQueryHandler {
+        public MainAsyncQueryHandler(ContentResolver cr) {
+            super(cr);
+        }
+
+        @Override
+        public void startQuery(int token, Object cookie, Uri uri, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+            super.startQuery(token, cookie, uri, projection, selection, selectionArgs, orderBy);
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            super.onQueryComplete(token, cookie, cursor);
+            if ((cursor != null) && cursor.moveToFirst()) {
+                if (token == QUERY_CURRENT_ACTIVITY_STATS) {
+                    long avg = cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.X_AVG_DURATION));
+                    String string1 = getResources().
+                            getString(R.string.avg_duration_description, TimeSpanFormatter.format(avg));
+                    viewModel.mAvgDuration.setValue(string1);
+
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ActivityDiaryApplication.getAppContext());
+                    String formatString = sharedPref.getString(SettingsActivity.KEY_PREF_DATETIME_FORMAT,
+                            getResources().getString(R.string.default_datetime_format));
+
+                    long start = cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.X_START_OF_LAST));
+                    String string = getResources().
+                            getString(R.string.last_done_description, DateFormat.format(formatString, start));
+                    viewModel.mStartOfLast.setValue(string);
+                    tips=string1+"\n"+string;
+
+
+
+                }else if(token == QUERY_CURRENT_ACTIVITY_TOTAL) {
+                    StatParam p = (StatParam)cookie;
+                    long total = cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.DiaryStats.DURATION));
+
+                    String x = DateHelper.dateFormat(p.field).format(p.end);
+                    x = x + ": " + TimeSpanFormatter.format(total);
+                    switch(p.field){
+                        case Calendar.DAY_OF_YEAR:
+                            viewModel.mTotalToday.setValue(x);
+                            break;
+                        case Calendar.WEEK_OF_YEAR:
+                            viewModel.mTotalWeek.setValue(x);
+                            break;
+                        case Calendar.MONTH:
+                            viewModel.mTotalMonth.setValue(x);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private MainAsyncQueryHandler mQHandler = new MainAsyncQueryHandler(ActivityDiaryApplication.getAppContext().getContentResolver());
 
     private void setCheckState(int checkState) {
         this.checkState = checkState;
@@ -236,7 +313,6 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         }
 
     }
-
     final Handler startTimehandler = new Handler() {
         public void handleMessage(Message msg) {
             tvTime.setText(String.valueOf(msg.obj));
@@ -269,6 +345,7 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        thiscontext = DetailActivity.this;
         mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
         viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
         mIat = SpeechRecognizer.createRecognizer(DetailActivity.this, mInitListener);
@@ -544,15 +621,46 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
                 showMsg("No activity running now.");
             }
         }
-        else if(params[0].equals("Note")){
-            if(ActivityHelper.helper.getCurrentActivity() != null){
-                String content = recoverToSentence(params);
-                NoteEditDialog dialog = new NoteEditDialog();
-                dialog.setText(viewModel.mNote.getValue() + content);
-                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
-            } else
-                showMsg("No current running activity!");
-        }
+//        else if(params[0].equals("Note")){
+//            if(ActivityHelper.helper.getCurrentActivity() != null){
+//                String content = recoverToSentence(params);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.edit_iat_res,null);
+//                final EditText editText= (EditText) DialogView.findViewById(R.id.iat_res);
+//                builder.setTitle("Note").setView(DialogView);
+//                editText.setText(content);
+//                editText.setSelection(editText.getText().length());
+//                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+//                    @Override
+//                    public void onClick(DialogInterface dialog,int which){
+//                        String final_res = editText.getText().toString();
+//                        ContentValues values = new ContentValues();
+//                        values.put(ActivityDiaryContract.Diary.NOTE, final_res);
+//
+//                        mQHandler.startUpdate(0,
+//                                null,
+//                                viewModel.getCurrentDiaryUri(),
+//                                values,
+//                                null, null);
+//
+//                        viewModel.mNote.postValue(final_res);
+//                        ActivityHelper.helper.setCurrentNote(final_res);
+////                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+//                    @Override
+//                    public void onClick(DialogInterface dialog,int which){
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.create().show();
+//            }
+//            else
+//                showMsg("No current running activity!");
+//        }
         else{
             showMsg("Undefined Option");
             return false;
