@@ -36,5 +36,3 @@ Android Gradle Plugin Version 7.3.0
 Gradle Version 7.4（注意不要更新gradle版本，否则会出现问题）
 
 ![Gradle](images/Gradle.png)
-
-测试
