@@ -96,6 +96,7 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
     JaroWinkler mJaroWinkler = new JaroWinkler(0.8);
     private Timer timer; // 将 Timer 定义为成员变量
     private TimerTask timerTask; // 定义 TimerTask 为成员变量
+    private long pauseTime = 0; // 记录暂停时的时间
     private LinearLayout rlContent;
     private TextInputLayout editActivityNameTil;
     private TextInputEditText editActivityName;
@@ -230,8 +231,9 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_cancel);
         tvTips.setText(getIntent().getStringExtra("tips"));
-        this.baseTimer = SystemClock.elapsedRealtime();
-
+        isStart = true; // 假设页面打开时开始计时
+        baseTimer = SystemClock.elapsedRealtime();
+        startTimer(); // 开始计时
         ivPlay.setImageResource(R.drawable.baseline_not_started_24);
         isStart = true;
 
@@ -246,9 +248,11 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
     private void toggleTimer() {
         if (isStart) {
+            pauseTime = SystemClock.elapsedRealtime() - baseTimer;
             stopTimer();
             ivPlay.setImageResource(R.drawable.baseline_play_circle_24); // 切换到播放图标
         } else {
+            baseTimer = SystemClock.elapsedRealtime() - pauseTime;
             startTimer();
             ivPlay.setImageResource(R.drawable.baseline_not_started_24); // 切换到暂停图标
         }
