@@ -79,6 +79,7 @@ public class AchievementActivity extends BaseActivity {
         achievementsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         loadAchievements();
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
 
     private void loadAchievements() {
