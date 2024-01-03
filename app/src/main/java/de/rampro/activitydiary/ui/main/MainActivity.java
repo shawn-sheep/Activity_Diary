@@ -515,7 +515,7 @@ public class MainActivity extends BaseActivity implements
     }
     private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("The countdonw time has expired. Stop current activity?");
+        builder.setMessage("The countdown time has expired. Stop current activity?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
