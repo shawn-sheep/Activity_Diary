@@ -73,6 +73,7 @@
             android:orientation="vertical"
             android:layout_weight="1"
             >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -112,6 +113,20 @@
                 android:text="Since: 11 min 45 sec agoAverageDuration: 14 minLastStart: 2023/10/17, 19 :00LastDuration: 19min"
                 android:layout_height="200dp"
                 ></TextView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/vocal_helper_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_vocal_helper"
+                android:visibility="visible"
+                app:fabSize="normal"
+                app:layout_anchorGravity="bottom|right|end" />
+
+
         </LinearLayout>
 
     </LinearLayout>

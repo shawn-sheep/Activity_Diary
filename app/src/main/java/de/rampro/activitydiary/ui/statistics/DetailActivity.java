@@ -19,13 +19,30 @@
 
 package de.rampro.activitydiary.ui.statistics;
 
+import static de.rampro.activitydiary.model.conditions.Condition.mOpenHelper;
+
+import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,16 +56,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.rampro.activitydiary.ActivityDiaryApplication;
 import de.rampro.activitydiary.R;
 import de.rampro.activitydiary.db.ActivityDiaryContract;
 import de.rampro.activitydiary.helpers.ActivityHelper;
@@ -57,6 +95,9 @@ import de.rampro.activitydiary.helpers.JaroWinkler;
 import de.rampro.activitydiary.model.DetailViewModel;
 import de.rampro.activitydiary.model.DiaryActivity;
 import de.rampro.activitydiary.ui.generic.BaseActivity;
+import de.rampro.activitydiary.ui.main.JsonParser;
+import de.rampro.activitydiary.ui.main.MainActivity;
+import de.rampro.activitydiary.ui.main.NoteEditDialog;
 
 
 public class DetailActivity extends BaseActivity implements ActivityHelper.DataChangedListener {
@@ -110,6 +151,20 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
     private long baseTimer;
     private boolean isStart = false;
+    private SpeechRecognizer mIat;// 语音听写对象
+    private RecognizerDialog mIatDialog;// 语音听写UI
+
+    // 用HashMap存储听写结果
+    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+
+    private SharedPreferences mSharedPreferences;//缓存
+
+    private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
+    private String resultType = "json";//结果内容数据格式
+    private CountDownTimer countDownTimer;
+    private MediaPlayer mediaPlayer;
+    private SearchView searchView;
+    private DetailViewModel viewModel;
 
     private void setCheckState(int checkState) {
         this.checkState = checkState;
@@ -117,7 +172,9 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
             mActivityNameTIL.setError("...");
         }
     }
-
+    private void showMsg(String msg){
+        Toast.makeText(DetailActivity.this,msg,Toast.LENGTH_SHORT).show();
+    }
 
     private void setBtnTooltip(View view, @Nullable CharSequence tooltipText) {
         if (Build.VERSION.SDK_INT < 26) {
@@ -126,6 +183,7 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
             view.setTooltipText(tooltipText);
         }
     }
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     /* refresh all view elements depending on currentActivity */
     private void refreshElements() {
@@ -183,11 +241,38 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
         }
     };
+    public void setParam() {
+        mIat.setParameter(SpeechConstant.PARAMS, null);
+        mIat.setParameter(SpeechConstant.ENGINE_TYPE, mEngineType);
+        mIat.setParameter(SpeechConstant.RESULT_TYPE, resultType);
+        mIat.setParameter(SpeechConstant.LANGUAGE,"en_us");
+        mIat.setParameter(SpeechConstant.VAD_BOS, mSharedPreferences.getString("iat_vadbos_preference", "4000"));
+        mIat.setParameter(SpeechConstant.VAD_EOS, mSharedPreferences.getString("iat_vadeos_preference", "1000"));
+        mIat.setParameter(SpeechConstant.ASR_PTT, mSharedPreferences.getString("iat_punc_preference", "1"));
+        mIat.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+        mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, getExternalFilesDir("msc").getAbsolutePath() + "/iat.wav");
+    }
 
+    private FloatingActionButton fabVocalHelper;
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+            Log.d(TAG, "SpeechRecognizer init() code = " + code);
+            if (code != ErrorCode.SUCCESS){
+                showMsg("初始化失败，错误码：" + code + ",请点击网址https://www.xfyun.cn/document/error-code查询解决方案");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        mIat = SpeechRecognizer.createRecognizer(DetailActivity.this, mInitListener);
+        mIatDialog = new RecognizerDialog(DetailActivity.this,mInitListener);
+        mSharedPreferences = getSharedPreferences("ASR", Activity.MODE_PRIVATE);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             linkCol = getResources().getColor(R.color.colorAccent, null);
         } else {
@@ -321,7 +406,238 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
 
     }
+    private String[] format(String[] params){
+        List<String> res = new ArrayList<>();
+        for(String param: params){
+            param = param.trim();
+            if(param.length() > 0 && (param.charAt(param.length()-1) == '.' || param.charAt(param.length()-1) == ','))
+                param = param.substring(0, param.length()-1);
+            if(!param.isEmpty()) {
+                param = param.toLowerCase();
+                param = Character.toUpperCase(param.charAt(0)) + param.substring(1);
+                res.add(param);
+            }
+        }
+        return res.toArray(new String[0]);
+    }
+    private static long convertEnglishToArabic(String englishNumber) {
+        if(englishNumber.equals("One"))
+            return 1;
+        else if(englishNumber.equals("Two"))
+            return 2;
+        else if(englishNumber.equals("Three"))
+            return 3;
+        else if(englishNumber.equals("Four"))
+            return 4;
+        else if(englishNumber.equals("Five"))
+            return 5;
+        else if(englishNumber.equals("Six"))
+            return 6;
+        else if(englishNumber.equals("Seven"))
+            return 7;
+        else if(englishNumber.equals("Eight"))
+            return 8;
+        else if(englishNumber.equals("Nine"))
+            return 9;
+        else
+            return -1;
+    }
+    private String recoverToSentence(String[] params){
+        StringBuilder res = new StringBuilder();
+        for(int i = 1; i < params.length; i++){
+            String tmp;
+            if(i == 1)
+                tmp = Character.toUpperCase(params[i].charAt(0))+params[i].substring(1);
+            else
+                tmp = params[i].toLowerCase();
+            res.append(tmp);
+            if(i != params.length - 1)
+                res.append(" ");
+            else
+                res.append(".");
+        }
+        return res.toString();
+    }
+    private boolean process(String res){
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        String[] params = format(res.split(" "));
+        if(params[0].equals("Stop")){
+            if(params[1].equals("Current") && params[2].equals("Activity")){
+                if(ActivityHelper.helper.getCurrentActivity() != null){
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
+                    ActivityHelper.helper.setCurrentActivity(null);
+                    finish();
+                }
+                else
+                    showMsg("No current running activity.");
+            }
+        }
+        else if(params[0].equals("Countdown") && params.length == 3){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                double n = 0;
+                try{
+                    n = Double.parseDouble(params[1]);
+                }
+                catch (NumberFormatException e) {
+                    n = convertEnglishToArabic(params[1]);
+                    if(n == -1){
+                        showMsg("You must countdown an integer number of time.");
+                        return false;
+                    }
+                }
+                int f=1000;
+                if(params[2].equals("Seconds"))
+                    f*=1;
+                else if(params[2].equals("Minutes"))
+                    f*=60;
+                else if(params[2].equals("Hours"))
+                    f*=3600;
+                else{
+                    showMsg("The unit of time must be seconds, minutes or hours");
+                    return false;
+                }
+                startCountDown((long)(n*f));
+                showMsg("Countdown  start.");
+            }
+            else{
+                showMsg("No activity running now.");
+            }
+        }
+        else if(params[0].equals("Note")){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                String content = recoverToSentence(params);
+                NoteEditDialog dialog = new NoteEditDialog();
+                dialog.setText(viewModel.mNote.getValue() + content);
+                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
+            } else
+                showMsg("No current running activity!");
+        }
+        else{
+            showMsg("Undefined Option");
+            return false;
+        }
+        return true;
+    }
+    private void startCountDown(long millisInFuture) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        initCountDownTimer(millisInFuture);
+        countDownTimer.start();
+    }
+    private void initCountDownTimer(long initialMillis) {
+        countDownTimer = new CountDownTimer(initialMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
 
+            @Override
+            public void onFinish() {
+                playMusic();
+            }
+        };
+    }
+    private void playMusic() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+        showAlertDialog();
+    }
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("The countdown time has expired. Stop current activity?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+                ActivityHelper.helper.setCurrentActivity(null);
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void stopMusic() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
+        }
+    }
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
+
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mIatResults.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : mIatResults.keySet()) {
+            resultBuffer.append(mIatResults.get(key));
+        }
+
+//        tvResult.setText(resultBuffer.toString());//听写结果显示
+//        showMsg(resultBuffer.toString());
+
+
+        String res = resultBuffer.toString();
+        if(!process(res)){
+            final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.edit_iat_res,null);
+            final EditText editText= (EditText) DialogView.findViewById(R.id.iat_res);
+            AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+            builder.setTitle("IatResult").setView(DialogView);
+            editText.setText(res);
+            editText.setSelection(editText.getText().length());
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    String final_res = editText.getText().toString();
+                    process(final_res);
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    dialog.cancel();
+                }
+            });
+
+            builder.create().show();
+        }
+    }
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results, boolean isLast) {
+            if(!isLast){
+                printResult(results);
+            }
+        }
+        public void onError(SpeechError error){
+            showMsg(error.getPlainDescription(true));
+        }
+    };
     @Override
     public void onResume() {
         if (currentActivity == null) {
@@ -425,6 +741,12 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        ActivityHelper.helper.setCurrentActivity(null);
+    }
+
     /**
      * Called on removale of an activity.
      *
@@ -454,6 +776,22 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mIat != null) {
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        mediaPlayer.release();
+        if(ActivityHelper.helper.getCurrentActivity()!=null)
+            ActivityHelper.helper.setCurrentActivity(null);
+    }
+
     private void initView() {
         rlContent = (LinearLayout) findViewById(R.id.rl_content);
         editActivityNameTil = (TextInputLayout) findViewById(R.id.edit_activity_name_til);
@@ -463,5 +801,16 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         tvTime = (TextView) findViewById(R.id.tv_time);
         ivPlay = (ImageView) findViewById(R.id.iv_play);
         tvTips = (TextView) findViewById(R.id.tv_tips);
+        fabVocalHelper = (FloatingActionButton) findViewById(R.id.vocal_helper_2);
+        fabVocalHelper.setOnClickListener(v->{
+            if( null == mIat){
+                showMsg("wrong");
+                return;
+            }
+            mIatResults.clear();
+            setParam();
+            mIatDialog.setListener(mRecognizerDialogListener);
+            mIatDialog.show();
+        });
     }
 }

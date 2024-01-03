@@ -167,11 +167,7 @@ public class MainActivity extends BaseActivity implements
     private SharedPreferences mSharedPreferences;//缓存
 
     private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
-    private String language = "zh_cn";//识别语言
-
-    //    private TextView tvResult = findViewById(R.id.tv_);//识别结果
     private String resultType = "json";//结果内容数据格式
-    //    public static Context MAcontext = null;
     private CountDownTimer countDownTimer;
     private MediaPlayer mediaPlayer;
 
@@ -305,6 +301,11 @@ public class MainActivity extends BaseActivity implements
                     Snackbar undoSnackBar = Snackbar.make(findViewById(R.id.main_layout),
                             snackbarText, Snackbar.LENGTH_LONG);
                     undoSnackBar.setAction(R.string.action_undo, new View.OnClickListener() {
+                        /**
+                         * Called when a view has been clicked.
+                         *
+                         * @param v The view that was clicked.
+                         */
                         @Override
                         public void onClick(View v) {
                             Log.v(TAG, "UNDO Activity Selection");
@@ -313,23 +314,16 @@ public class MainActivity extends BaseActivity implements
                     });
                     undoSnackBar.show();
 
+                    Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
+                    intentDetail.putExtra("activityID", activity_id);
 
 
+                    intentDetail.putExtra("tips", tips);
+
+                    startActivity(intentDetail);
                 }else{
                     showMsg("It's already running now.");
                 }
-            }
-        }
-        else if(params[0].equals("Stop")){
-            if(params[1].equals("Current") && params[2].equals("Activity")){
-                if(ActivityHelper.helper.getCurrentActivity() != null){
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                    }
-                    ActivityHelper.helper.setCurrentActivity(null);
-                }
-                else
-                    showMsg("No current running activity.");
             }
         }
         else if(params[0].equals("Create")){
@@ -360,37 +354,6 @@ public class MainActivity extends BaseActivity implements
                 ActivityHelper.helper.insertActivity(new DiaryActivity(-1, activity, mActivityColor));
             }
         }
-        else if(params[0].equals("Countdown") && params.length == 3){
-            if(ActivityHelper.helper.getCurrentActivity() != null){
-                double n = 0;
-                try{
-                    n = Double.parseDouble(params[1]);
-                }
-                catch (NumberFormatException e) {
-                    n = convertEnglishToArabic(params[1]);
-                    if(n == -1){
-                        showMsg("You must countdown an integer number of time.");
-                        return false;
-                    }
-                }
-                int f=1000;
-                if(params[2].equals("Seconds"))
-                    f*=1;
-                else if(params[2].equals("Minutes"))
-                    f*=60;
-                else if(params[2].equals("Hours"))
-                    f*=3600;
-                else{
-                    showMsg("The unit of time must be seconds, minutes or hours");
-                    return false;
-                }
-                startCountDown((long)(n*f));
-                showMsg("Countdown  start.");
-            }
-            else{
-                showMsg("No activity running now.");
-            }
-        }
         else if(params[0].equals("Delete")){
             String activity = params[1];
             Cursor tmp = db.query("activity",new String [] {"name", "_id", "color"},"name=?",new String [] {activity},null,null,null);
@@ -407,15 +370,6 @@ public class MainActivity extends BaseActivity implements
                 DiaryActivity tarAct = new DiaryActivity(activity_id,activity_name,activity_color);
                 ActivityHelper.helper.deleteActivity(tarAct);
             }
-        }
-        else if(params[0].equals("Note")){
-            if(ActivityHelper.helper.getCurrentActivity() != null){
-                String content = recoverToSentence(params);
-                NoteEditDialog dialog = new NoteEditDialog();
-                dialog.setText(viewModel.mNote.getValue() + content);
-                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
-            } else
-                showMsg("No current running activity!");
         }
         else{
             showMsg("Undefined Option");
@@ -475,11 +429,9 @@ public class MainActivity extends BaseActivity implements
             builder.create().show();
         }
     }
-    //    private int cnt = 0;
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
             if(!isLast){
-//                cnt++;
                 printResult(results);
             }
         }
@@ -835,7 +787,7 @@ public class MainActivity extends BaseActivity implements
             intentDetail.putExtra("activityID", selectAdapter.item(adapterPosition).getId());
 
 
-            intentDetail.putExtra("tips",        tips);
+            intentDetail.putExtra("tips", tips);
 
             startActivity(intentDetail);
 
