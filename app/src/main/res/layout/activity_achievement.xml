@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/achievements_recycler_view"
         android:layout_width="0dp"
