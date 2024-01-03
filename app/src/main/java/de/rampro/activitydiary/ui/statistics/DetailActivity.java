@@ -237,13 +237,13 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         ivPlay.setImageResource(R.drawable.baseline_not_started_24);
         isStart = true;
 
-        // 设置播放按钮的点击监听器
-        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleTimer();
-            }
-        });
+//        // 设置播放按钮的点击监听器
+//        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                toggleTimer();
+//            }
+//        });
     }
 
     private void toggleTimer() {
