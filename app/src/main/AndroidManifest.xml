@@ -125,6 +125,8 @@
             android:label="@string/activity_title_map" />
         <activity android:name=".ui.statistics.StatisticsActivity"
             android:label="@string/activity_title_stats" />
+        <activity android:name=".ui.statistics.DetailActivity"
+            android:label="@string/activity_title_stats" />
         <provider
             android:name=".db.ActivityDiaryContentProvider"
             android:authorities="${applicationId}.provider"

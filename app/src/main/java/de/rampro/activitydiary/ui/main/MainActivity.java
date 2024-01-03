@@ -95,6 +95,7 @@ import de.rampro.activitydiary.ui.generic.BaseActivity;
 import de.rampro.activitydiary.ui.generic.EditActivity;
 import de.rampro.activitydiary.ui.history.HistoryDetailActivity;
 import de.rampro.activitydiary.ui.settings.SettingsActivity;
+import de.rampro.activitydiary.ui.statistics.DetailActivity;
 
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -168,11 +169,13 @@ public class MainActivity extends BaseActivity implements
     private String mEngineType = SpeechConstant.TYPE_CLOUD;// 引擎类型
     private String language = "zh_cn";//识别语言
 
-//    private TextView tvResult = findViewById(R.id.tv_);//识别结果
+    //    private TextView tvResult = findViewById(R.id.tv_);//识别结果
     private String resultType = "json";//结果内容数据格式
-//    public static Context MAcontext = null;
+    //    public static Context MAcontext = null;
     private CountDownTimer countDownTimer;
     private MediaPlayer mediaPlayer;
+
+    private String tips="-";
 
     private void setSearchMode(boolean searchMode){
         if(searchMode){
@@ -309,6 +312,9 @@ public class MainActivity extends BaseActivity implements
                         }
                     });
                     undoSnackBar.show();
+
+
+
                 }else{
                     showMsg("It's already running now.");
                 }
@@ -469,7 +475,7 @@ public class MainActivity extends BaseActivity implements
             builder.create().show();
         }
     }
-//    private int cnt = 0;
+    //    private int cnt = 0;
     private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
         public void onResult(RecognizerResult results,boolean isLast) {
             if(!isLast){
@@ -824,6 +830,15 @@ public class MainActivity extends BaseActivity implements
                 }
             });
             undoSnackBar.show();
+
+            Intent intentDetail = new Intent(MainActivity.this, DetailActivity.class);
+            intentDetail.putExtra("activityID", selectAdapter.item(adapterPosition).getId());
+
+
+            intentDetail.putExtra("tips",        tips);
+
+            startActivity(intentDetail);
+
         }else{
             /* clicked the currently active activity in the list, so let's terminate it due to #176 */
             if (countDownTimer != null) {
@@ -1157,17 +1172,21 @@ public class MainActivity extends BaseActivity implements
             if ((cursor != null) && cursor.moveToFirst()) {
                 if (token == QUERY_CURRENT_ACTIVITY_STATS) {
                     long avg = cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.X_AVG_DURATION));
-                    viewModel.mAvgDuration.setValue(getResources().
-                            getString(R.string.avg_duration_description, TimeSpanFormatter.format(avg)));
+                    String string1 = getResources().
+                            getString(R.string.avg_duration_description, TimeSpanFormatter.format(avg));
+                    viewModel.mAvgDuration.setValue(string1);
 
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ActivityDiaryApplication.getAppContext());
                     String formatString = sharedPref.getString(SettingsActivity.KEY_PREF_DATETIME_FORMAT,
                             getResources().getString(R.string.default_datetime_format));
 
                     long start = cursor.getLong(cursor.getColumnIndex(ActivityDiaryContract.DiaryActivity.X_START_OF_LAST));
+                    String string = getResources().
+                            getString(R.string.last_done_description, DateFormat.format(formatString, start));
+                    viewModel.mStartOfLast.setValue(string);
+                    tips=string1+"\n"+string;
 
-                    viewModel.mStartOfLast.setValue(getResources().
-                            getString(R.string.last_done_description, DateFormat.format(formatString, start)));
+
 
                 }else if(token == QUERY_CURRENT_ACTIVITY_TOTAL) {
                     StatParam p = (StatParam)cookie;
