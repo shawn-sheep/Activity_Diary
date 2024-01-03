@@ -20,6 +20,7 @@
 
 package de.rampro.activitydiary.db;
 
+import de.rampro.activitydiary.helpers.AchievementHelper;
 import de.rampro.activitydiary.model.Achievement.*;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.rampro.activitydiary.model.Achievement;
@@ -300,24 +302,41 @@ public class LocalDBHelper extends SQLiteOpenHelper {
         return activityID;
     }
 
-    private void Init_Achievement(SQLiteDatabase db){
-        // 获取sleeping活动的ID
-        int sleepingActivityId = getActivityID(db, "Sleeping");
+    private void Init_Achievement(SQLiteDatabase db) {
+        // 原有的成就
+        addAchievement(db, "睡眠大师", "24小时内连续睡觉三次", Arrays.asList("Sleeping"));
+        addAchievement(db, "睡眠专家", "48小时内连续睡觉五次", Arrays.asList("Sleeping"));
+        addAchievement(db, "睡眠传奇", "一周内累计睡眠超过50小时", Arrays.asList("Sleeping"));
 
-        // 添加并关联睡眠大师成就
-        long sleepingMasterId = insertAchievement(db, "睡眠大师", "24小时内连续睡觉三次", 0, 0);
-        insertCorrespondingAchievement(db, sleepingActivityId, sleepingMasterId);
+        //联动成就
+        addAchievement(db, "原神启动", "第一次启动原神", Arrays.asList("Genshin"));
 
-        // 添加并关联睡眠专家成就
-        long sleepingExpertId = insertAchievement(db, "睡眠专家", "48小时内连续睡觉五次", 0, 0);
-        insertCorrespondingAchievement(db, sleepingActivityId, sleepingExpertId);
+        // 新添加的成就
+        addAchievement(db, "早起者", "连续7天在早上6点前起床", Arrays.asList("EarlyRising"));
+        addAchievement(db, "水下探险家", "一个月内进行5次潜水活动", Arrays.asList("Diving"));
+        addAchievement(db, "山地征服者", "攀登三座不同的山峰", Arrays.asList("MountainClimbing"));
+        addAchievement(db, "健身狂热", "连续30天进行健身训练", Arrays.asList("Fitness"));
+        addAchievement(db, "烹饪新手", "尝试10种不同的烹饪食谱", Arrays.asList("Cooking"));
+        addAchievement(db, "步行者", "一天内步行超过20000步", Arrays.asList("Walking"));
+        addAchievement(db, "瑜伽达人", "进行一个月的瑜伽练习", Arrays.asList("Yoga"));
+        addAchievement(db, "摄影师", "在不同地点拍摄50张照片", Arrays.asList("Photography"));
+        addAchievement(db, "环境保护者", "参与5次环境清洁活动", Arrays.asList("EnvironmentalProtection"));
+        addAchievement(db, "烘焙大师", "烘焙10种不同的蛋糕", Arrays.asList("Baking"));
 
-        // 添加并关联睡眠传奇成就
-        long sleepingLegendId = insertAchievement(db, "睡眠传奇", "一周内累计睡眠超过50小时", 0, 0);
-        insertCorrespondingAchievement(db, sleepingActivityId, sleepingLegendId);
     }
 
-    private long insertAchievement(SQLiteDatabase db, String title, String description, int unlocked, int unlockTime) {
+    private void addAchievement(SQLiteDatabase db, String title, String description, List<String> activityNames) {
+        long achievementId = insert_Achievement_to_DB(db, title, description, 0, 0);
+        for (String activityName : activityNames) {
+            int activityId = getActivityID(db, activityName);
+            if (activityId != -1) {
+                insertCorrespondingAchievement(db, activityId, achievementId);
+            }
+        }
+        AchievementHelper.mp.put(title, achievementId);
+    }
+
+    private long insert_Achievement_to_DB(SQLiteDatabase db, String title, String description, int unlocked, int unlockTime) {
         ContentValues values = new ContentValues();
         values.put(AchievementEntry.COLUMN_NAME_TITLE, title);
         values.put(AchievementEntry.COLUMN_NAME_DESCRIPTION, description);

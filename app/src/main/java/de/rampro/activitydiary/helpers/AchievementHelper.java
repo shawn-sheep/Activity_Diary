@@ -31,7 +31,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import de.rampro.activitydiary.ActivityDiaryApplication;
@@ -49,21 +51,18 @@ public class AchievementHelper extends Activity {
         AchievementHelper.context = ActivityDiaryApplication.getAppContext();
     }
 
-    Long SLEEP_MASTER_ACHIEVEMENT_ID = 1L;
-    Long SLEEP_EXPERT_ACHIEVEMENT_ID = 2L;
-    Long SLEEP_LEGEND_ACHIEVEMENT_ID = 3L;
-
+    public static Map<String, Long> mp = new HashMap<>();
     public void UpdateAchievements(DiaryActivity current_activity){
         if (current_activity != null) {
             List<Long> achievementIds = ActivityDiaryContentProvider.getAchievementIdsForActivity(current_activity.getId());
 
             for (Long achievementId : achievementIds) {
                 // 对于其他成就的处理
-                if (Objects.equals(achievementId, SLEEP_MASTER_ACHIEVEMENT_ID)) { // 假设这是睡眠大师成就的 ID
+                if (Objects.equals(achievementId, mp.get("睡眠大师"))) { // 假设这是睡眠大师成就的 ID
                     checkAndUnlockSleepMasterAchievement();
-                } else if (Objects.equals(achievementId, SLEEP_EXPERT_ACHIEVEMENT_ID)) { // 假设这是睡眠专家成就的 ID
+                } else if (Objects.equals(achievementId, mp.get("睡眠专家"))) { // 假设这是睡眠专家成就的 ID
                     checkAndUnlockSleepExpertAchievement();
-                } else if (Objects.equals(achievementId, SLEEP_LEGEND_ACHIEVEMENT_ID)) { // 假设这是睡眠传奇成就的 ID
+                } else if (Objects.equals(achievementId, mp.get("睡眠传奇"))) { // 假设这是睡眠传奇成就的 ID
                     checkAndUnlockSleepLegendAchievement();
                 }
             }
