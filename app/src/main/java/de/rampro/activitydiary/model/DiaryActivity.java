@@ -56,4 +56,8 @@ public class DiaryActivity{
     public int hashCode(){
         return mId;
     }
+
+    public String getDuration() {
+        return null;
+    }
 }

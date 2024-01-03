@@ -283,6 +283,44 @@ public class EditActivity extends BaseActivity implements ActivityHelper.DataCha
             mActivityName.setText(currentActivity.getName());
             getSupportActionBar().setTitle(currentActivity.getName());
             mActivityColor = currentActivity.getColor();
+            String name=currentActivity.getName();
+            switch (name){
+                case "Cinema":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cinema);
+                    break;
+                case "Cooking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cooking);
+                    break;
+                case "Sleeping":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.sleeping);
+                    break;
+                case "Cleaning":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cleaning);
+                    break;
+                case "Woodworking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.woodworking);
+                    break;
+                case "Gardening":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.gardening);
+                    break;
+                case "Officework":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.officework);
+                    break;
+                case "Relaxing":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.relaxing);
+                    break;
+                case "Swimming":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.swimming);
+                    break;
+                default:
+                    break;
+            }
+
+
+
+
+
+
         } else {
             currentActivity = null;
             mActivityColor = GraphicsHelper.prepareColorForNextActivity();
@@ -360,6 +398,41 @@ public class EditActivity extends BaseActivity implements ActivityHelper.DataCha
             mActivityName.setText(name);
             getSupportActionBar().setTitle(name);
             checkConstraints();
+
+            switch (name){
+                case "Cinema":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cinema);
+                    break;
+                case "Cooking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cooking);
+                    break;
+                case "Sleeping":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.sleeping);
+                    break;
+                case "Cleaning":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cleaning);
+                    break;
+                case "Woodworking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.woodworking);
+                    break;
+                case "Gardening":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.gardening);
+                    break;
+                case "Officework":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.officework);
+                    break;
+                case "Relaxing":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.relaxing);
+                    break;
+                case "Swimming":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.swimming);
+                    break;
+                default:
+                    break;
+            }
+
+
+
         }else{
             refreshElements();
         }
