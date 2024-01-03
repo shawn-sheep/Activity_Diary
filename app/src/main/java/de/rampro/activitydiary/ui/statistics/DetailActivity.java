@@ -135,9 +135,7 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
     private static final int CHECK_STATE_ERROR = 3;
 
     JaroWinkler mJaroWinkler = new JaroWinkler(0.8);
-    private Timer timer; // 将 Timer 定义为成员变量
-    private TimerTask timerTask; // 定义 TimerTask 为成员变量
-    private long pauseTime = 0; // 记录暂停时的时间
+    private Timer timber;
     private LinearLayout rlContent;
     private TextInputLayout editActivityNameTil;
     private TextInputEditText editActivityName;
@@ -303,142 +301,343 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
 
         mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
+
         if (savedInstanceState != null) {
             String name = savedInstanceState.getString(NAME_KEY);
+            //String avgDuration = savedInstanceState.getString("mDuration");
             mActivityColor = savedInstanceState.getInt(COLOR_KEY);
             mActivityName.setText(name);
             getSupportActionBar().setTitle(name);
-            setActivityBackground(name);
+
+            switch (name) {
+                case "Cinema":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cinema);
+                    break;
+                case "Cooking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cooking);
+                    break;
+                case "Sleeping":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.sleeping);
+                    break;
+                case "Cleaning":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.cleaning);
+                    break;
+                case "Woodworking":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.woodworking);
+                    break;
+                case "Gardening":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.gardening);
+                    break;
+                case "Officework":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.officework);
+                    break;
+                case "Relaxing":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.relaxing);
+                    break;
+                case "Swimming":
+                    findViewById(R.id.rl_content).setBackgroundResource(R.mipmap.swimming);
+                    break;
+                default:
+                    break;
+            }
         } else {
             refreshElements();
-            startTimer();
         }
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_cancel);
         tvTips.setText(getIntent().getStringExtra("tips"));
-        isStart = true; // 假设页面打开时开始计时
-        baseTimer = SystemClock.elapsedRealtime();
-        startTimer(); // 开始计时
+        this.baseTimer = SystemClock.elapsedRealtime();
+
         ivPlay.setImageResource(R.drawable.baseline_not_started_24);
         isStart = true;
 
-//        // 设置播放按钮的点击监听器
-//        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                toggleTimer();
-//            }
-//        });
-    }
-
-    private void toggleTimer() {
-        if (isStart) {
-            pauseTime = SystemClock.elapsedRealtime() - baseTimer;
-            stopTimer();
-            ivPlay.setImageResource(R.drawable.baseline_play_circle_24); // 切换到播放图标
-        } else {
-            baseTimer = SystemClock.elapsedRealtime() - pauseTime;
-            startTimer();
-            ivPlay.setImageResource(R.drawable.baseline_not_started_24); // 切换到暂停图标
-        }
-        isStart = !isStart;
-    }
-
-
-    private void setActivityBackground(String activityName) {
-        if (activityName == null || rlContent == null) {
-            return;
-        }
-
-        switch (activityName) {
-            case "Cinema":
-                rlContent.setBackgroundResource(R.mipmap.cinema);
-                break;
-            case "Cooking":
-                rlContent.setBackgroundResource(R.mipmap.cooking);
-                break;
-            case "Sleeping":
-                rlContent.setBackgroundResource(R.mipmap.sleeping);
-                break;
-            case "Cleaning":
-                rlContent.setBackgroundResource(R.mipmap.cleaning);
-                break;
-            case "Woodworking":
-                rlContent.setBackgroundResource(R.mipmap.woodworking);
-                break;
-            case "Gardening":
-                rlContent.setBackgroundResource(R.mipmap.gardening);
-                break;
-            case "Officework":
-                rlContent.setBackgroundResource(R.mipmap.officework);
-                break;
-            case "Relaxing":
-                rlContent.setBackgroundResource(R.mipmap.relaxing);
-                break;
-            case "Swimming":
-                rlContent.setBackgroundResource(R.mipmap.swimming);
-                break;
-            default:
-                // 您可以选择一个默认的背景或者不设置
-                break;
-        }
-    }
-
-    private void handlePlayButton() {
-        if (!isStart) {
-            ivPlay.setImageResource(R.drawable.baseline_not_started_24);
-            isStart = true;
-            startTimer();
-        } else {
-            isStart = false;
-            ivPlay.setImageResource(R.drawable.baseline_play_circle_24);
-            stopTimer();
-        }
-    }
-
-    private void startTimer() {
-        if (timer != null) {
-            timer.cancel();
-        }
-        timer = new Timer("计时器");
-        timerTask = new TimerTask() {
+        timber = new Timer("开机计时器");
+        timber.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                long elapsed = SystemClock.elapsedRealtime() - baseTimer;
-                updateTimer(elapsed);
+                int time = (int) ((SystemClock.elapsedRealtime() - baseTimer) / 1000);
+                String hh = new DecimalFormat("00").format(time / 3600);
+                String mm = new DecimalFormat("00").format(time % 3600 / 60);
+                String ss = new DecimalFormat("00").format(time % 60);
+                String timeFormat = new String(hh + ":" + mm + ":" + ss);
+                Message msg = new Message();
+                msg.obj = timeFormat;
+                startTimehandler.sendMessage(msg);
             }
-        };
-        timer.scheduleAtFixedRate(timerTask, 0, 1000L);
-    }
 
-    private void updateTimer(long elapsedTime) {
-        int seconds = (int) (elapsedTime / 1000);
-        int minutes = seconds / 60;
-        int hours = minutes / 60;
-        seconds = seconds % 60;
+        }, 0, 1000L);
 
-        // 更新UI必须在主线程中进行
-        int finalSeconds = seconds;
-        runOnUiThread(new Runnable() {
+
+        findViewById(R.id.iv_play).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                tvTime.setText(String.format("%02d:%02d:%02d", hours, minutes, finalSeconds));
+            public void onClick(View v) {
+                if (!isStart) {
+                    ivPlay.setImageResource(R.drawable.baseline_not_started_24);
+                    isStart = true;
+
+                    timber = new Timer("开机计时器");
+                    timber.scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            int time = (int) ((SystemClock.elapsedRealtime() - baseTimer) / 1000);
+                            String hh = new DecimalFormat("00").format(time / 3600);
+                            String mm = new DecimalFormat("00").format(time % 3600 / 60);
+                            String ss = new DecimalFormat("00").format(time % 60);
+                            String timeFormat = new String(hh + ":" + mm + ":" + ss);
+                            Message msg = new Message();
+                            msg.obj = timeFormat;
+                            startTimehandler.sendMessage(msg);
+                        }
+
+                    }, 0, 1000L);
+                } else {
+                    isStart = false;
+                    ivPlay.setImageResource(R.drawable.baseline_play_circle_24);
+                    if (timber != null) {
+                        timber.cancel();
+                        timber = null;
+                    }
+
+
+                }
+
             }
         });
+
+
     }
-
-    private void stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+    private String[] format(String[] params){
+        List<String> res = new ArrayList<>();
+        for(String param: params){
+            param = param.trim();
+            if(param.length() > 0 && (param.charAt(param.length()-1) == '.' || param.charAt(param.length()-1) == ','))
+                param = param.substring(0, param.length()-1);
+            if(!param.isEmpty()) {
+                param = param.toLowerCase();
+                param = Character.toUpperCase(param.charAt(0)) + param.substring(1);
+                res.add(param);
+            }
         }
-        if (timerTask != null) {
-            timerTask.cancel();
-            timerTask = null;
+        return res.toArray(new String[0]);
+    }
+    private static long convertEnglishToArabic(String englishNumber) {
+        if(englishNumber.equals("One"))
+            return 1;
+        else if(englishNumber.equals("Two"))
+            return 2;
+        else if(englishNumber.equals("Three"))
+            return 3;
+        else if(englishNumber.equals("Four"))
+            return 4;
+        else if(englishNumber.equals("Five"))
+            return 5;
+        else if(englishNumber.equals("Six"))
+            return 6;
+        else if(englishNumber.equals("Seven"))
+            return 7;
+        else if(englishNumber.equals("Eight"))
+            return 8;
+        else if(englishNumber.equals("Nine"))
+            return 9;
+        else
+            return -1;
+    }
+    private String recoverToSentence(String[] params){
+        StringBuilder res = new StringBuilder();
+        for(int i = 1; i < params.length; i++){
+            String tmp;
+            if(i == 1)
+                tmp = Character.toUpperCase(params[i].charAt(0))+params[i].substring(1);
+            else
+                tmp = params[i].toLowerCase();
+            res.append(tmp);
+            if(i != params.length - 1)
+                res.append(" ");
+            else
+                res.append(".");
+        }
+        return res.toString();
+    }
+    private boolean process(String res){
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        String[] params = format(res.split(" "));
+        if(params[0].equals("Stop")){
+            if(params[1].equals("Current") && params[2].equals("Activity")){
+                if(ActivityHelper.helper.getCurrentActivity() != null){
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
+                    ActivityHelper.helper.setCurrentActivity(null);
+                    finish();
+                }
+                else
+                    showMsg("No current running activity.");
+            }
+        }
+        else if(params[0].equals("Countdown") && params.length == 3){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                double n = 0;
+                try{
+                    n = Double.parseDouble(params[1]);
+                }
+                catch (NumberFormatException e) {
+                    n = convertEnglishToArabic(params[1]);
+                    if(n == -1){
+                        showMsg("You must countdown an integer number of time.");
+                        return false;
+                    }
+                }
+                int f=1000;
+                if(params[2].equals("Seconds"))
+                    f*=1;
+                else if(params[2].equals("Minutes"))
+                    f*=60;
+                else if(params[2].equals("Hours"))
+                    f*=3600;
+                else{
+                    showMsg("The unit of time must be seconds, minutes or hours");
+                    return false;
+                }
+                startCountDown((long)(n*f));
+                showMsg("Countdown  start.");
+            }
+            else{
+                showMsg("No activity running now.");
+            }
+        }
+        else if(params[0].equals("Note")){
+            if(ActivityHelper.helper.getCurrentActivity() != null){
+                String content = recoverToSentence(params);
+                NoteEditDialog dialog = new NoteEditDialog();
+                dialog.setText(viewModel.mNote.getValue() + content);
+                dialog.show(getSupportFragmentManager(), "NoteEditDialogFragment");
+            } else
+                showMsg("No current running activity!");
+        }
+        else{
+            showMsg("Undefined Option");
+            return false;
+        }
+        return true;
+    }
+    private void startCountDown(long millisInFuture) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        initCountDownTimer(millisInFuture);
+        countDownTimer.start();
+    }
+    private void initCountDownTimer(long initialMillis) {
+        countDownTimer = new CountDownTimer(initialMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                playMusic();
+            }
+        };
+    }
+    private void playMusic() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
+        showAlertDialog();
+    }
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("The countdown time has expired. Stop current activity?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+                ActivityHelper.helper.setCurrentActivity(null);
+                dialog.dismiss();
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stopMusic();
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void stopMusic() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = MediaPlayer.create(this, R.raw.kiring);
         }
     }
+    private void printResult(RecognizerResult results) {
+        String text = JsonParser.parseIatResult(results.getResultString());
+
+        String sn = null;
+        // 读取json结果中的sn字段
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mIatResults.put(sn, text);
+
+        StringBuffer resultBuffer = new StringBuffer();
+        for (String key : mIatResults.keySet()) {
+            resultBuffer.append(mIatResults.get(key));
+        }
+
+//        tvResult.setText(resultBuffer.toString());//听写结果显示
+//        showMsg(resultBuffer.toString());
 
 
+        String res = resultBuffer.toString();
+        if(!process(res)){
+            final View DialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.edit_iat_res,null);
+            final EditText editText= (EditText) DialogView.findViewById(R.id.iat_res);
+            AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+            builder.setTitle("IatResult").setView(DialogView);
+            editText.setText(res);
+            editText.setSelection(editText.getText().length());
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    String final_res = editText.getText().toString();
+                    process(final_res);
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    dialog.cancel();
+                }
+            });
+
+            builder.create().show();
+        }
+    }
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results, boolean isLast) {
+            if(!isLast){
+                printResult(results);
+            }
+        }
+        public void onError(SpeechError error){
+            showMsg(error.getPlainDescription(true));
+        }
+    };
     @Override
     public void onResume() {
         if (currentActivity == null) {
@@ -469,12 +668,6 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.details_menu, menu);
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopTimer(); // 在销毁活动时停止计时器
     }
 
     @Override
