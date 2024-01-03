@@ -93,6 +93,8 @@
             />
         <activity android:name=".ui.generic.ManageActivity"
             android:label="@string/activity_title_manage_activities" />
+        <activity android:name=".ui.generic.AchievementActivity"
+            android:label="Achievement" />
         <activity android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/activity_title_history_detail"
             android:windowSoftInputMode="adjustPan"
