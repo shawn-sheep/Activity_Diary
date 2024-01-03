@@ -703,12 +703,6 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopTimer(); // 在销毁活动时停止计时器
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
@@ -828,6 +822,10 @@ public class DetailActivity extends BaseActivity implements ActivityHelper.DataC
         mediaPlayer.release();
         if(ActivityHelper.helper.getCurrentActivity()!=null)
             ActivityHelper.helper.setCurrentActivity(null);
+
+        super.onDestroy();
+        stopTimer(); // 在销毁活动时停止计时器
+
     }
 
     private void initView() {
